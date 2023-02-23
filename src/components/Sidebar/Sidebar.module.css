@@ -1,0 +1,20 @@
+.nav_item:hover{
+    background-color: rgb(240, 240, 240);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+.sidebar_wrapper{
+    border-right: 1px solid rgb(219, 219, 219);;
+    height: 100vh;
+    position: relative;
+}
+.nav_item:hover .sidebar_icon{
+    scale: 1.10;
+    transition: all 0.25s ease-out;
+}
+.setting_area{
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+}
