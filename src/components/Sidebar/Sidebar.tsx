@@ -23,10 +23,7 @@ const Sidebar: React.FunctionComponent = () => {
                     to={item.to}
                 />
             ))}
-            <SidebarUser
-                image='/_next/static/media/avatar.7f76d32f.jpg'
-                userName='nhiempc'
-            />
+            <SidebarUser image={images.avatar.default.src} userName='nhiempc' />
             <div className={`${style.setting_area} w-full px-3`}>
                 <SidebarItem
                     key={'setting'}
