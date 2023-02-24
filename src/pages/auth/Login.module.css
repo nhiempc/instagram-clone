@@ -90,7 +90,7 @@
     padding: 8px 40px;
     display: flex;
     box-sizing: border-box;
-    gap: 5px;
+    gap: 10px;
     align-items: center;
     width: 100%;
 }
@@ -98,8 +98,9 @@
     border: 0;
     background-color: unset;
     color: #385185;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
+    font-size: 14px;
 }
 .forgot_pw{
     font-size: 12px;

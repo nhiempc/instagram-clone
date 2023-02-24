@@ -5,7 +5,7 @@ import Stories from '@/components/Stories';
 import Posts from '@/components/Posts';
 import Footer from '@/components/Footer';
 
-const Home: React.FunctionComponent = () => {
+const HomePage: React.FunctionComponent = () => {
     return (
         <Layout>
             <Content>
@@ -19,4 +19,4 @@ const Home: React.FunctionComponent = () => {
     );
 };
 
-export default Home;
+export default HomePage;
