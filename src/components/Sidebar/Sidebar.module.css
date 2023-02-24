@@ -5,9 +5,10 @@
     transition: all 0.5s;
 }
 .sidebar_wrapper{
-    border-right: 1px solid rgb(219, 219, 219);;
+    border-right: 1px solid rgb(219, 219, 219);
     height: 100vh;
     position: relative;
+    border-bottom: 1px solid rgb(219, 219, 219);
 }
 .nav_item:hover .sidebar_icon{
     scale: 1.10;

@@ -10,7 +10,7 @@ import SidebarUser from './SidebarUser';
 const Sidebar: React.FunctionComponent = () => {
     return (
         <div
-            className={`${style.sidebar_wrapper} flex flex-col w-1/5 px-3 pt-2 pb-5`}
+            className={`${style.sidebar_wrapper} flex flex-col w-1/6 px-3 pt-2 pb-5`}
         >
             <Link href={'/'} className='logo pt-6 pb-4 px-3'>
                 <Image src={images.logo} alt='logo' priority />

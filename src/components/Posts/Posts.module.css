@@ -1,0 +1,67 @@
+.post_wrapper{
+    margin-top: 12px;
+    padding-top: 20px;
+}
+.post_item{
+    margin-bottom: 12px;
+    padding-bottom: 20px;
+}
+.post_header_left{
+    flex-grow: 1;
+}
+.user span{
+    margin: 0px 5px;
+}
+.user, .like_count, .username_2{
+    color: rgb(38, 38, 38);
+    font-size: 14px;
+    font-weight: 600;
+}
+.user:hover{
+    color: gray;
+}
+.time{
+    color: gray;
+    font-weight: 400;
+    font-size: 13px;
+}
+.username{
+    padding-left: 15px;
+}
+.post_header_right{
+    cursor: pointer;
+}
+.btn{
+    padding: 8px;
+}
+.interact_left{
+    flex-grow: 1;
+}
+.post_caption{
+    font-size: 15px;
+    font-weight: 400;
+}
+.username_2{
+    padding-right: 5px;
+}
+.add_comment textarea{
+    width: 100%;
+    outline: none;
+    font-weight: 400;
+    font-size: 14px;
+    resize: none;
+    overflow-y: hidden;
+    flex-grow: 1;
+}
+.add_comment textarea::placeholder{
+    font-size: 14px;
+}
+.add_comment textarea:focus{
+    border: 1px solid rgb(0, 149, 246);
+    border-radius: 5px;
+}
+.post_comment{
+    color: rgb(0, 149, 246);
+    font-size: 14px;
+    font-weight: 500;
+}
