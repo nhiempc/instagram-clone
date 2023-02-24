@@ -1,0 +1,56 @@
+.user_avatar{
+    width: 56px;
+    height: 56px;
+}
+.username{
+    color: rgb(38, 38, 38);
+    font-size: 14px;
+    font-weight: 600;
+}
+.user_info{
+    flex-grow: 1;
+}
+.full_name, .suggest_for_you, .suggest_full_name{
+    color: gray;
+    font-size: 14px;
+    font-weight: 500;
+}
+.suggest_full_name{
+    font-size: 12px;
+}
+.btn, .view_all{
+    color: rgb(0, 149, 246);
+    font-size: 13px;
+    font-weight: 500;
+}
+.suggest_user_avatar{
+    width: 32px;
+    height: 32px;
+}
+.view_all:active, .btn:active{
+    color: black;
+}
+.footer_link{
+    color: rgb(199,199,199);
+    font-size: 12px;
+    position: relative;
+    padding-right: 12px;
+}
+.footer_link:hover{
+    text-decoration: underline;
+}
+.footer_link::after{
+    content: '•';
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.footer_menu li:last-child .footer_link::after{
+    display: none;
+}
+.copyright{
+    text-transform: uppercase;
+    color: rgb(199,199,199);
+    font-size: 13px;
+}

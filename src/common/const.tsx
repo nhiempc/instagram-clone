@@ -64,3 +64,45 @@ export const setting: menuItems = {
     content: 'Xem thêm',
     to: '/'
 };
+export const footerMenu = [
+    {
+        to: '/',
+        content: 'Giới thiệu'
+    },
+    {
+        to: '/',
+        content: 'Trợ giúp'
+    },
+    {
+        to: '/',
+        content: 'Báo chí'
+    },
+    {
+        to: '/',
+        content: 'API'
+    },
+    {
+        to: '/',
+        content: 'Việc làm'
+    },
+    {
+        to: '/',
+        content: 'Quyền riêng tư'
+    },
+    {
+        to: '/',
+        content: 'Điều khoản'
+    },
+    {
+        to: '/',
+        content: 'Vị trí'
+    },
+    {
+        to: '/',
+        content: 'Ngôn ngữ'
+    },
+    {
+        to: '/',
+        content: 'Meta đã xác minh'
+    }
+];

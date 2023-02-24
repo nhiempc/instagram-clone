@@ -9,6 +9,8 @@
     height: 100vh;
     position: relative;
     border-bottom: 1px solid rgb(219, 219, 219);
+    position: sticky;
+    top: 0;
 }
 .nav_item:hover .sidebar_icon{
     scale: 1.10;
