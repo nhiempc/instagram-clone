@@ -129,6 +129,7 @@
 .download_app_header{
     font-weight: 300;
     text-align: center;
+    margin: 10px 20px;
 }
 .download_links{
     display: flex;

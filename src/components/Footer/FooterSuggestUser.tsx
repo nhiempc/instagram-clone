@@ -21,8 +21,8 @@ const FooterSuggestUser: React.FunctionComponent<FooterSuggestUserProps> = ({
                     Xem tất cả
                 </Link>
             </div>
-            {suggestUserList.map((user) => (
-                <FooterSuggestUserItem suggestUser={user} />
+            {suggestUserList.map((user, index) => (
+                <FooterSuggestUserItem key={index} suggestUser={user} />
             ))}
         </div>
     );
