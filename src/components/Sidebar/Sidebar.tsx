@@ -21,6 +21,8 @@ const Sidebar: React.FunctionComponent = () => {
                     icon={item.icon}
                     content={item.content}
                     to={item.to}
+                    type={item.type}
+                    btnAction={item.btnAction}
                 />
             ))}
             <SidebarUser image={images.avatar.default.src} userName='nhiempc' />
@@ -30,6 +32,7 @@ const Sidebar: React.FunctionComponent = () => {
                     icon={setting.icon}
                     to={setting.to}
                     content={setting.content}
+                    type={setting.type}
                 />
             </div>
         </div>

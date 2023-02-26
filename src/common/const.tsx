@@ -19,50 +19,60 @@ import {
 type menuItems = {
     icon: React.ReactNode;
     content: string;
-    to: string;
+    to?: string | undefined;
+    type: string;
+    btnAction?: string;
 };
 
 export const menu: menuItems[] = [
     {
         icon: <HomeActiveIcon />,
         content: 'Trang chủ',
-        to: '/'
+        to: '/',
+        type: 'link'
     },
     {
         icon: <SearchIcon />,
         content: 'Tìm kiếm',
-        to: '/'
+        type: 'button',
+        btnAction: 'search'
     },
     {
         icon: <ExploreIcon />,
         content: 'Khám phá',
-        to: '/'
+        to: '/',
+        type: 'link'
     },
     {
         icon: <ReelsIcon />,
         content: 'Reels',
-        to: '/'
+        to: '/',
+        type: 'link'
     },
     {
         icon: <MessengerIcon />,
         content: 'Tin nhắn',
-        to: '/'
+        to: '/',
+        type: 'link'
     },
     {
         icon: <NotificationIcon />,
         content: 'Thông báo',
-        to: '/'
+        type: 'button',
+        btnAction: 'notification'
     },
     {
         icon: <CreateIcon />,
         content: 'Tạo',
-        to: '/'
+        type: 'button',
+        btnAction: 'create'
     }
 ];
 export const setting: menuItems = {
     icon: <ViewMoreIcon />,
     content: 'Xem thêm',
-    to: '/'
+    type: 'button',
+    btnAction: 'view-more'
 };
 export const footerMenu = [
     {
