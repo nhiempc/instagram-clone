@@ -6,6 +6,7 @@
 }
 .uploadImageArea{
     border-right: 1px solid rgb(219, 219, 219);
+    overflow: hidden;
 }
 .uploadImageArea img{
     z-index: -1;

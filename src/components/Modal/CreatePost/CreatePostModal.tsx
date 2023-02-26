@@ -6,23 +6,34 @@ import style from './CreatePostModal.module.css';
 import { useSession } from 'next-auth/react';
 import { removeVietnameseTones } from '@/common';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { db, storage } from '../../../../firebase';
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    updateDoc
+} from 'firebase/firestore';
+import { ref, getDownloadURL, uploadString } from 'firebase/storage';
 
 type CreatePostModalProps = {
     isOpen: boolean;
     handleClose: () => void;
+    handleFinishUpload: () => void;
 };
 
 const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
     isOpen,
-    handleClose
+    handleClose,
+    handleFinishUpload
 }) => {
-    const [selectedFile, setSelectedFile] = React.useState<
-        string | ArrayBuffer | null | undefined
-    >(null);
+    const [selectedFile, setSelectedFile] = React.useState<any>(null);
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const { data: session } = useSession();
 
     const filePikerRef = React.useRef<any>(null);
+    const captionRef = React.useRef<any>(null);
 
     const username = removeVietnameseTones(session?.user?.name as string)
         .split(' ')
@@ -45,13 +56,38 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         }
     };
 
+    const uploadPost = async () => {
+        if (loading) return;
+        setLoading(true);
+        // 1. Create a post and add to firestore 'posts' collection
+        // 2. Get the post ID for the newly created post
+        // 3. Upload the image to firebase storage with the post ID
+        // 4. Get a download URL from firebase storage and update the original post with image
+        const docRef = await addDoc(collection(db, 'posts'), {
+            username: username,
+            caption: captionRef.current.value,
+            profileImg: session?.user?.image,
+            timestamp: serverTimestamp()
+        });
+
+        const imgRef = ref(storage, `post/${docRef.id}/image`);
+        await uploadString(imgRef, selectedFile, 'data_url').then(
+            async (snapshot) => {
+                const downloadURL = await getDownloadURL(imgRef);
+                await updateDoc(doc(db, 'posts', docRef.id), {
+                    image: downloadURL
+                });
+            }
+        );
+        setLoading(false);
+        handleFinishUpload();
+    };
+
     React.useEffect(() => {
         if (isOpen === false) {
             setSelectedFile(null);
         }
     }, [isOpen]);
-
-    console.log(isOpen);
 
     return (
         <>
@@ -100,8 +136,12 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                         <button
                                             type='button'
                                             className={`${style.btnShare}`}
+                                            onClick={uploadPost}
+                                            disabled={loading}
                                         >
-                                            Chia sẻ
+                                            {loading
+                                                ? 'Đang tải lên'
+                                                : 'Chia sẻ'}
                                         </button>
                                     </Dialog.Title>
                                     <div className=''>
@@ -174,6 +214,7 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                                     className={`${style.captionInput}`}
                                                 >
                                                     <textarea
+                                                        ref={captionRef}
                                                         className={`${style.inputCaption} px-4 w-full`}
                                                         placeholder='Viết chú thích...'
                                                     ></textarea>

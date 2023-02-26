@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import style from './Sidebar.module.css';
+import { useSession } from 'next-auth/react';
 
 interface SidebarUserProps {
     image: string;
@@ -11,6 +12,7 @@ const SidebarUser: React.FunctionComponent<SidebarUserProps> = ({
     image,
     userName
 }) => {
+    const { data: session } = useSession();
     return (
         <Link
             href={`/${userName}`}
@@ -19,7 +21,7 @@ const SidebarUser: React.FunctionComponent<SidebarUserProps> = ({
             <div className={style.sidebar_icon}>
                 <img
                     className='rounded-full'
-                    src={image}
+                    src={session?.user?.image || undefined}
                     alt='avatar'
                     width={25}
                     height={25}

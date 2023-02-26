@@ -61,6 +61,7 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
                 <CreatePostModal
                     isOpen={isOpen}
                     handleClose={handleCloseCreatePostModal}
+                    handleFinishUpload={handleCloseCreatePostModal}
                 />
             </>
         );
