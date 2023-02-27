@@ -1,8 +1,9 @@
-import React, { MouseEventHandler, useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import style from './Posts.module.css';
 import {
     CommentActiveIcon,
     LikeActiveIcon,
+    LikedIcon,
     MoreOptionIcon,
     SaveActiveIcon,
     ShareActiveIcon
@@ -12,11 +13,14 @@ import { removeVietnameseTones, TimeAgo } from '@/common';
 import {
     addDoc,
     collection,
+    deleteDoc,
+    doc,
     DocumentData,
     onSnapshot,
     orderBy,
     query,
-    serverTimestamp
+    serverTimestamp,
+    setDoc
 } from 'firebase/firestore';
 import PostComments from './PostComments';
 import { db } from '../../../firebase';
@@ -29,9 +33,12 @@ type PostItemProps = {
 const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [comment, setComment] = useState<string>('');
     const [comments, setComments] = useState<DocumentData[] | undefined>();
+    const [likes, setLikes] = useState<DocumentData[] | undefined>();
+    const [hasLike, setHasLike] = useState<boolean>();
 
     const { data: session } = useSession();
-    const usernamee = removeVietnameseTones(session?.user?.name as string)
+    const inputRef = React.useRef<HTMLTextAreaElement>(null);
+    const username = removeVietnameseTones(session?.user?.name as string)
         .split(' ')
         .join('')
         .toLowerCase();
@@ -39,13 +46,20 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const handleChange = (e: any) => {
         setComment(e.target.value);
     };
+
+    const handleClickCommentIcon = () => {
+        if (inputRef.current !== null) {
+            inputRef?.current.focus();
+        }
+    };
+
     const handleAddComment = async (e: any) => {
         e.preventDefault();
         const commentToSend = comment;
         setComment('');
         await addDoc(collection(db, 'posts', post.id, 'comments'), {
             comment: commentToSend,
-            username: usernamee,
+            username: username,
             userImage: session?.user?.image,
             timestamp: serverTimestamp()
         });
@@ -62,8 +76,38 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     setComments(snapshot.docs);
                 }
             ),
-        [db]
+        [db, post.id]
     );
+    React.useEffect(
+        () =>
+            onSnapshot(
+                collection(db, 'posts', post.id, 'likes'),
+                (snapshot) => {
+                    setLikes(snapshot.docs);
+                }
+            ),
+        [db, post.id]
+    );
+    React.useEffect(() => {
+        const index = likes?.findIndex(
+            (item) => item.data().username === username
+        );
+        if (index === -1) {
+            setHasLike(false);
+        } else {
+            setHasLike(true);
+        }
+    }, [likes, db]);
+
+    const handleClickLike = async () => {
+        if (hasLike) {
+            await deleteDoc(doc(db, 'posts', post.id, 'likes', username));
+        } else {
+            await setDoc(doc(db, 'posts', post.id, 'likes', username), {
+                username: username
+            });
+        }
+    };
 
     const ago = TimeAgo.inWords(
         post.data().timestamp !== null
@@ -104,10 +148,16 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     <div
                         className={`${style.interact_left} flex items-center my-1`}
                     >
-                        <button className={`${style.btn_like} ${style.btn}`}>
-                            <LikeActiveIcon />
+                        <button
+                            className={`${style.btn_like} ${style.btn}`}
+                            onClick={handleClickLike}
+                        >
+                            {hasLike ? <LikedIcon /> : <LikeActiveIcon />}
                         </button>
-                        <button className={`${style.btn_comment} ${style.btn}`}>
+                        <button
+                            className={`${style.btn_comment} ${style.btn}`}
+                            onClick={handleClickCommentIcon}
+                        >
                             <CommentActiveIcon />
                         </button>
                         <button className={`${style.btn_share} ${style.btn}`}>
@@ -120,8 +170,11 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         </button>
                     </div>
                 </div>
-                <div className={`${style.like_count} mx-2`}>
-                    3.906 lượt thích
+                <div className={`${style.like_count} mx-2 my-1`}>
+                    {likes?.length} lượt thích
+                </div>
+                <div className={`${style.comment_count} mx-2`}>
+                    {comments?.length} lượt bình luận
                 </div>
                 <div className={`${style.post_caption} mx-2`}>
                     <span className={`${style.username_2}`}>
@@ -136,6 +189,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
             <div className={`${style.add_comment} w-full mt-2 mx-2`}>
                 <form action='' className='flex items-center gap-2'>
                     <textarea
+                        ref={inputRef}
                         name='add_comment'
                         id='add_comment'
                         placeholder='Thêm bình luận...'

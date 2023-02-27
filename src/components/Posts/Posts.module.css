@@ -15,7 +15,8 @@
 }
 .user,
 .like_count,
-.username_2 {
+.username_2,
+.comment_count {
     color: rgb(38, 38, 38);
     font-size: 14px;
     font-weight: 600;
