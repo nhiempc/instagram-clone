@@ -150,3 +150,60 @@ export function removeVietnameseTones(str: string) {
 export function isEmpty(obj: any) {
     return Object.keys(obj).length === 0;
 }
+export const TimeAgo = (function () {
+    var self: any = {};
+
+    // Public Methods
+    self.locales = {
+        prefix: '',
+        sufix: 'trước',
+
+        seconds: 'Nhỏ hơn một phút',
+        minute: 'Khoảng một phút',
+        minutes: '%d phút',
+        hour: 'Khoảng một giờ',
+        hours: 'Khoảng %d giờ',
+        day: 'Một ngày',
+        days: '%d ngày',
+        month: 'Khoảng một tháng',
+        months: '%d tháng',
+        year: 'Khoảng một năm',
+        years: '%d năm'
+    };
+
+    self.inWords = function (timeAgo: any) {
+        var d: any = new Date();
+        var seconds = Math.floor((d - parseInt(timeAgo)) / 1000),
+            separator = this.locales.separator || ' ',
+            words = this.locales.prefix + separator,
+            interval = 0,
+            intervals: any = {
+                year: seconds / 31536000,
+                month: seconds / 2592000,
+                day: seconds / 86400,
+                hour: seconds / 3600,
+                minute: seconds / 60
+            };
+
+        var distance = this.locales.seconds;
+
+        for (var key in intervals) {
+            interval = Math.floor(intervals[key]);
+
+            if (interval > 1) {
+                distance = this.locales[key + 's'];
+                break;
+            } else if (interval === 1) {
+                distance = this.locales[key];
+                break;
+            }
+        }
+
+        distance = distance.replace(/%d/i, interval);
+        words += distance + separator + this.locales.sufix;
+
+        return words.trim();
+    };
+
+    return self;
+})();

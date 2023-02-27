@@ -8,28 +8,28 @@ import {
     ShareActiveIcon
 } from '@/assets/icons';
 import Link from 'next/link';
+import { TimeAgo } from '@/common';
 
 type PostItemProps = {
-    id: string;
     username: string;
-    avatar: string;
+    caption: string;
     image: string;
-    content: string;
-    createdAt: string;
+    profileImg: string;
+    timestamp: string;
 };
 
 const PostItem: React.FunctionComponent<PostItemProps> = ({
-    id,
     username,
-    avatar,
+    caption,
     image,
-    content,
-    createdAt
+    profileImg,
+    timestamp
 }) => {
     const [comment, setComment] = useState('');
     const handleChange = (e: any) => {
         setComment(e.target.value);
     };
+    const ago = TimeAgo.inWords(Number(timestamp) * 1000);
     return (
         <div className={`${style.post_item} flex flex-col`}>
             <div className={`${style.post_header} flex items-center`}>
@@ -37,7 +37,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                     <div className={`${style.user} flex items-center`}>
                         <Link href={`/${username}`}>
                             <img
-                                src={avatar}
+                                src={profileImg}
                                 alt={username}
                                 className='rounded-full w-[32px] h-[32px]'
                             />
@@ -46,7 +46,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                             <Link href={`/${username}`}>{username}</Link>
                         </div>
                         <span>•</span>
-                        <div className={`${style.time}`}>{createdAt}</div>
+                        <div className={`${style.time}`}>{ago}</div>
                     </div>
                 </div>
                 <div className={`${style.post_header_right}`}>
@@ -54,7 +54,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                 </div>
             </div>
             <div className={`${style.post_img}`}>
-                <img src={image} alt={content} />
+                <img src={image} alt={caption} />
             </div>
             <div className={`${style.post_content}`}>
                 <div className={`${style.interact} flex items-center`}>
@@ -84,7 +84,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                     <span className={`${style.username_2}`}>
                         <Link href={`/${username}`}>{username}</Link>
                     </span>
-                    {content}
+                    {caption}
                 </div>
             </div>
             <div className={`${style.add_comment} w-full mt-2 mx-2`}>
