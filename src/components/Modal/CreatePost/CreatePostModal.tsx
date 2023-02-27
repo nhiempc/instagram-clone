@@ -81,6 +81,7 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         );
         setLoading(false);
         handleFinishUpload();
+        setSelectedFile(null);
     };
 
     React.useEffect(() => {

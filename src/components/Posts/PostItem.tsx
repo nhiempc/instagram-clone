@@ -9,41 +9,40 @@ import {
 } from '@/assets/icons';
 import Link from 'next/link';
 import { TimeAgo } from '@/common';
+import { DocumentData } from 'firebase/firestore';
 
 type PostItemProps = {
-    username: string;
-    caption: string;
-    image: string;
-    profileImg: string;
-    timestamp: string;
+    post: DocumentData;
 };
 
-const PostItem: React.FunctionComponent<PostItemProps> = ({
-    username,
-    caption,
-    image,
-    profileImg,
-    timestamp
-}) => {
+const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [comment, setComment] = useState('');
     const handleChange = (e: any) => {
         setComment(e.target.value);
     };
-    const ago = TimeAgo.inWords(Number(timestamp) * 1000);
+
+    const ago = TimeAgo.inWords(
+        post.timestamp !== null
+            ? Number(post.timestamp.seconds) * 1000
+            : new Date().getTime()
+    );
+
     return (
         <div className={`${style.post_item} flex flex-col`}>
             <div className={`${style.post_header} flex items-center`}>
                 <div className={`${style.post_header_left} my-3 mx-1`}>
                     <div className={`${style.user} flex items-center`}>
-                        <Link href={`/${username}`}>
+                        <Link href={`/${post.username}`}>
                             <img
-                                src={profileImg}
-                                alt={username}
+                                src={post.profileImg}
+                                alt={post.username}
                                 className='rounded-full w-[32px] h-[32px]'
                             />
                         </Link>
                         <div className={`${style.username}`}>
-                            <Link href={`/${username}`}>{username}</Link>
+                            <Link href={`/${post.username}`}>
+                                {post.username}
+                            </Link>
                         </div>
                         <span>•</span>
                         <div className={`${style.time}`}>{ago}</div>
@@ -54,7 +53,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                 </div>
             </div>
             <div className={`${style.post_img}`}>
-                <img src={image} alt={caption} />
+                <img src={post.image} alt={post.caption} />
             </div>
             <div className={`${style.post_content}`}>
                 <div className={`${style.interact} flex items-center`}>
@@ -82,9 +81,9 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({
                 </div>
                 <div className={`${style.post_caption} mx-2`}>
                     <span className={`${style.username_2}`}>
-                        <Link href={`/${username}`}>{username}</Link>
+                        <Link href={`/${post.username}`}>{post.username}</Link>
                     </span>
-                    {caption}
+                    {post.caption}
                 </div>
             </div>
             <div className={`${style.add_comment} w-full mt-2 mx-2`}>
