@@ -156,19 +156,19 @@ export const TimeAgo = (function () {
     // Public Methods
     self.locales = {
         prefix: '',
-        sufix: 'trước',
+        sufix: '',
 
-        seconds: 'Nhỏ hơn một phút',
-        minute: 'Khoảng một phút',
-        minutes: '%d phút',
-        hour: 'Khoảng một giờ',
-        hours: 'Khoảng %d giờ',
-        day: 'Một ngày',
-        days: '%d ngày',
-        month: 'Khoảng một tháng',
-        months: '%d tháng',
-        year: 'Khoảng một năm',
-        years: '%d năm'
+        seconds: 'Vừa xong',
+        minute: 'Khoảng một phút trước',
+        minutes: '%d phút trước',
+        hour: 'Khoảng một giờ trước',
+        hours: 'Khoảng %d giờ trước',
+        day: 'Một ngày trước',
+        days: '%d ngày trước',
+        month: 'Khoảng một tháng trước',
+        months: '%d tháng trước',
+        year: 'Khoảng một năm trước',
+        years: '%d năm trước'
     };
 
     self.inWords = function (timeAgo: any) {

@@ -8,9 +8,6 @@ import {
     collection,
     query,
     orderBy,
-    doc,
-    getDoc,
-    getDocs,
     DocumentData
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
@@ -23,10 +20,7 @@ const Posts: React.FunctionComponent = () => {
             onSnapshot(
                 query(collection(db, 'posts'), orderBy('timestamp', 'desc')),
                 (snapshot) => {
-                    const postData: DocumentData[] = snapshot.docs.map((doc) =>
-                        doc.data()
-                    );
-                    setPosts(postData);
+                    setPosts(snapshot.docs);
                 }
             ),
         [db]
@@ -34,8 +28,8 @@ const Posts: React.FunctionComponent = () => {
 
     return (
         <div className={`${style.post_wrapper}`}>
-            {posts?.map((post: any, index: number) => (
-                <PostItem key={index} post={post} />
+            {posts?.map((post: DocumentData) => (
+                <PostItem key={post.id} post={post} />
             ))}
         </div>
     );
