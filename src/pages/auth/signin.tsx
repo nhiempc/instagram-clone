@@ -7,6 +7,15 @@ import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc
+} from 'firebase/firestore';
+import { db } from '../../../firebase';
+import { removeVietnameseTones } from '@/common';
 
 // Browser
 function SignIn() {
@@ -27,11 +36,27 @@ function SignIn() {
         getProvidersValue();
     }, []);
 
+    const addUser = async () => {
+        const username = removeVietnameseTones(session?.user?.name as string)
+            .split(' ')
+            .join('')
+            .toLowerCase();
+
+        const userData = {
+            username: username,
+            name: session?.user?.name,
+            email: session?.user?.email || null,
+            profileImg: session?.user?.image,
+            timestamp: serverTimestamp()
+        };
+        await setDoc(doc(db, 'users', username), userData);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (session) {
+        addUser();
         router.push('/');
     }
-
     if (!session)
         return (
             <>
@@ -80,11 +105,7 @@ function SignIn() {
                                     ) : null}
                                     <button
                                         key={provider.name}
-                                        onClick={() =>
-                                            signIn(provider.id, {
-                                                callbackUrl: '/'
-                                            })
-                                        }
+                                        onClick={() => signIn(provider.id)}
                                     >
                                         Đăng nhập bằng {provider.name}
                                     </button>

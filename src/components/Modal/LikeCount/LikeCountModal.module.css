@@ -1,0 +1,36 @@
+.likeArea {
+    max-height: 40vh;
+}
+.header {
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+.btnCancel,
+.btnNone {
+    padding: 8px 16px;
+}
+.btnNone {
+    cursor: unset;
+}
+.btnCancel {
+    color: rgb(38, 38, 38);
+    font-size: 14px;
+}
+.likeArea::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+}
+.likeArea::-webkit-scrollbar {
+    width: 10px;
+}
+.btnFollow button {
+    background-color: rgb(24, 119, 242);
+    color: white;
+    opacity: 0.8;
+    font-weight: 500;
+}
+.btnFollow button:hover {
+    opacity: 1;
+    transition: all 0.2s;
+}
+.userLikeInfo {
+    font-size: 14px;
+}

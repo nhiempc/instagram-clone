@@ -6,7 +6,6 @@ import Posts from '@/components/Posts';
 import Footer from '@/components/Footer';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { Link } from 'react-router-dom';
 
 const HomePage: React.FunctionComponent = () => {
     const { data: session, status } = useSession();
@@ -16,6 +15,7 @@ const HomePage: React.FunctionComponent = () => {
     if (!session) {
         router.push('/auth/signin');
     }
+
     return (
         session && (
             <Layout>
@@ -29,21 +29,6 @@ const HomePage: React.FunctionComponent = () => {
             </Layout>
         )
     );
-    //  : (
-    //     <h1>
-    //         Ban can{' '}
-    //         <button
-    //             style={{
-    //                 backgroundColor: 'green',
-    //                 color: 'white',
-    //                 padding: '5px 20px',
-    //                 borderRadius: '5px'
-    //             }}
-    //         >
-    //             <a href='auth/signin'>dang nhap</a>
-    //         </button>
-    //     </h1>
-    // );
 };
 
 export default HomePage;

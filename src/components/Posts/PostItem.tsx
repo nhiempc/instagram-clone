@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react';
+import React, { useState } from 'react';
 import style from './Posts.module.css';
 import {
     CommentActiveIcon,
@@ -30,6 +30,7 @@ import PersonalModal from '../Modal/Personal/PersonalModal';
 import PublicModal from '../Modal/Public/PublicModal';
 import { deleteObject, ref } from 'firebase/storage';
 import Picker, { EmojiStyle } from 'emoji-picker-react';
+import LikeCountModal from '../Modal/LikeCount/LikeCountModal';
 
 type PostItemProps = {
     post: DocumentData;
@@ -41,6 +42,8 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [likes, setLikes] = useState<DocumentData[] | undefined>();
     const [hasLike, setHasLike] = useState<boolean>();
     const [isOpen, setIsOpen] = React.useState(false);
+    const [isOpenLikeCountModal, setIsOpenLikeCountModal] =
+        React.useState(false);
     const [showPicker, setShowPicker] = useState(false);
 
     const onEmojiClick = (emojiObject: any) => {
@@ -83,6 +86,13 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
 
     const handleClose = () => {
         setIsOpen(!isOpen);
+    };
+    const handleShowLikeCount = () => {
+        setIsOpenLikeCountModal(!isOpenLikeCountModal);
+    };
+
+    const handleCloseLikeCount = () => {
+        setIsOpenLikeCountModal(!isOpenLikeCountModal);
     };
 
     const handleDelete = async () => {
@@ -231,9 +241,17 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         </button>
                     </div>
                 </div>
-                <div className={`${style.like_count} mx-2 my-1`}>
+                <div
+                    className={`${style.like_count} mx-2 my-1 cursor-pointer`}
+                    onClick={handleShowLikeCount}
+                >
                     {likes?.length} lượt thích
                 </div>
+                <LikeCountModal
+                    isOpen={isOpenLikeCountModal}
+                    handleClose={handleCloseLikeCount}
+                    postId={post.id}
+                />
                 <div className={`${style.comment_count} mx-2`}>
                     {comments?.length} lượt bình luận
                 </div>
