@@ -6,6 +6,7 @@ import style from './CreatePostModal.module.css';
 import { useSession } from 'next-auth/react';
 import { removeVietnameseTones } from '@/common';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import Picker, { EmojiStyle } from 'emoji-picker-react';
 import { db, storage } from '../../../../firebase';
 import {
     addDoc,
@@ -28,7 +29,9 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
     handleFinishUpload
 }) => {
     const [selectedFile, setSelectedFile] = React.useState<any>(null);
+    const [caption, setCaption] = React.useState<string>('');
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [showPicker, setShowPicker] = React.useState(false);
 
     const { data: session } = useSession();
 
@@ -54,6 +57,11 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         if (filePikerRef.current !== null) {
             filePikerRef.current.click();
         }
+    };
+
+    const onEmojiClick = (emojiObject: any) => {
+        setCaption((prevInput) => prevInput + emojiObject.emoji);
+        setShowPicker(false);
     };
 
     const uploadPost = async () => {
@@ -87,6 +95,7 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
     React.useEffect(() => {
         if (isOpen === false) {
             setSelectedFile(null);
+            setCaption('');
         }
     }, [isOpen]);
 
@@ -215,18 +224,46 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                                     className={`${style.captionInput}`}
                                                 >
                                                     <textarea
+                                                        value={caption}
+                                                        onChange={(e) => {
+                                                            setCaption(
+                                                                e.target.value
+                                                            );
+                                                        }}
                                                         ref={captionRef}
                                                         className={`${style.inputCaption} px-4 w-full`}
                                                         placeholder='Viết chú thích...'
                                                     ></textarea>
+
                                                     <button
                                                         className={`${style.emoji} px-4`}
+                                                        type='button'
+                                                        onClick={() =>
+                                                            setShowPicker(
+                                                                (
+                                                                    val: boolean
+                                                                ) => !val
+                                                            )
+                                                        }
                                                     >
                                                         <EmojiIcon
                                                             width='20'
                                                             height='20'
                                                         />
                                                     </button>
+                                                    {showPicker && (
+                                                        <div className='emojiPiker top-[450px]'>
+                                                            <Picker
+                                                                emojiStyle={
+                                                                    EmojiStyle.FACEBOOK
+                                                                }
+                                                                width={'100%'}
+                                                                onEmojiClick={
+                                                                    onEmojiClick
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div
                                                     className={`${style.captionLocation} flex justify-between items-center pr-4`}

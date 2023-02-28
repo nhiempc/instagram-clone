@@ -2,6 +2,7 @@ import React, { RefObject, useState } from 'react';
 import style from './Posts.module.css';
 import {
     CommentActiveIcon,
+    EmojiIcon,
     LikeActiveIcon,
     LikedIcon,
     MoreOptionIcon,
@@ -28,6 +29,7 @@ import { useSession } from 'next-auth/react';
 import PersonalModal from '../Modal/Personal/PersonalModal';
 import PublicModal from '../Modal/Public/PublicModal';
 import { deleteObject, ref } from 'firebase/storage';
+import Picker, { EmojiStyle } from 'emoji-picker-react';
 
 type PostItemProps = {
     post: DocumentData;
@@ -39,6 +41,12 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [likes, setLikes] = useState<DocumentData[] | undefined>();
     const [hasLike, setHasLike] = useState<boolean>();
     const [isOpen, setIsOpen] = React.useState(false);
+    const [showPicker, setShowPicker] = useState(false);
+
+    const onEmojiClick = (emojiObject: any) => {
+        setComment((prevInput) => prevInput + emojiObject.emoji);
+        setShowPicker(false);
+    };
 
     const { data: session } = useSession();
     const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -249,14 +257,35 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         value={comment}
                         onChange={handleChange}
                     ></textarea>
-                    {comment && (
-                        <button
-                            onClick={handleAddComment}
-                            className={`${style.post_comment_btn}`}
-                        >
-                            Đăng
-                        </button>
-                    )}
+
+                    <div className='flex gap-2 items-center cursor-pointer'>
+                        {comment && (
+                            <button
+                                onClick={handleAddComment}
+                                className={`${style.post_comment_btn}`}
+                            >
+                                Đăng
+                            </button>
+                        )}
+                        <div className='addEmojiWrapper relative'>
+                            <button
+                                type='button'
+                                className='addEmojiBtn align-middle'
+                                onClick={() => setShowPicker((val) => !val)}
+                            >
+                                <EmojiIcon width='16' height='16' />
+                            </button>
+                            {showPicker && (
+                                <div className='emojiPiker absolute top-[-450px] left-0 z-10'>
+                                    <Picker
+                                        emojiStyle={EmojiStyle.FACEBOOK}
+                                        width={'100%'}
+                                        onEmojiClick={onEmojiClick}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
