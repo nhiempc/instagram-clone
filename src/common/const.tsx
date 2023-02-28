@@ -168,7 +168,7 @@ export const PersonalModalBtn = [
     {
         label: 'Xóa',
         danger: true,
-        action: 'detele'
+        action: 'delete'
     },
     {
         label: 'Chỉnh sửa',

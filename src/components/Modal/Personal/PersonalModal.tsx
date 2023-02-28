@@ -7,11 +7,13 @@ import Button from './Button';
 type PersonalModalProps = {
     isOpen: boolean;
     handleCancel: () => void;
+    handleDelete: () => void;
 };
 
 const PersonalModal: React.FC<PersonalModalProps> = ({
     isOpen,
-    handleCancel
+    handleCancel,
+    handleDelete
 }) => {
     return (
         <>
@@ -56,6 +58,7 @@ const PersonalModal: React.FC<PersonalModalProps> = ({
                                                 danger={btn.danger}
                                                 action={btn.action}
                                                 handleCancel={handleCancel}
+                                                handleDelete={handleDelete}
                                             />
                                         ))}
                                     </div>

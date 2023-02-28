@@ -23,10 +23,11 @@ import {
     setDoc
 } from 'firebase/firestore';
 import PostComments from './PostComments';
-import { db } from '../../../firebase';
+import { db, storage } from '../../../firebase';
 import { useSession } from 'next-auth/react';
 import PersonalModal from '../Modal/Personal/PersonalModal';
 import PublicModal from '../Modal/Public/PublicModal';
+import { deleteObject, ref } from 'firebase/storage';
 
 type PostItemProps = {
     post: DocumentData;
@@ -73,6 +74,33 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     };
 
     const handleClose = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleDelete = async () => {
+        const queryComments = query(
+            collection(db, 'posts', post.id, 'comments')
+        );
+        const queryLikes = query(collection(db, 'posts', post.id, 'likes'));
+        const imgRef = ref(storage, `post/${post.id}/image`);
+        onSnapshot(queryComments, (snapshot) =>
+            snapshot.docs.forEach((d) =>
+                deleteDoc(doc(db, 'posts', post.id, 'comments', d.id))
+            )
+        );
+        onSnapshot(queryLikes, (snapshot) =>
+            snapshot.docs.forEach((d) =>
+                deleteDoc(doc(db, 'posts', post.id, 'likes', d.id))
+            )
+        );
+        await deleteObject(imgRef)
+            .then(() => {
+                // File deleted successfully
+            })
+            .catch((error) => {
+                // Uh-oh, an error occurred!
+            });
+        await deleteDoc(doc(db, 'posts', post.id));
         setIsOpen(!isOpen);
     };
 
@@ -154,6 +182,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                             <PersonalModal
                                 isOpen={isOpen}
                                 handleCancel={handleClose}
+                                handleDelete={handleDelete}
                             />
                         ) : (
                             <PublicModal
