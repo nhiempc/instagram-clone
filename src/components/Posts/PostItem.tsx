@@ -25,6 +25,8 @@ import {
 import PostComments from './PostComments';
 import { db } from '../../../firebase';
 import { useSession } from 'next-auth/react';
+import PersonalModal from '../Modal/Personal/PersonalModal';
+import PublicModal from '../Modal/Public/PublicModal';
 
 type PostItemProps = {
     post: DocumentData;
@@ -35,6 +37,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [comments, setComments] = useState<DocumentData[] | undefined>();
     const [likes, setLikes] = useState<DocumentData[] | undefined>();
     const [hasLike, setHasLike] = useState<boolean>();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const { data: session } = useSession();
     const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -63,6 +66,14 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
             userImage: session?.user?.image,
             timestamp: serverTimestamp()
         });
+    };
+
+    const handleViewMoreBtnClick = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleClose = () => {
+        setIsOpen(!isOpen);
     };
 
     React.useEffect(
@@ -137,7 +148,20 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     </div>
                 </div>
                 <div className={`${style.post_header_right}`}>
-                    <MoreOptionIcon />
+                    <button type='button' onClick={handleViewMoreBtnClick}>
+                        <MoreOptionIcon />
+                        {post.data().username === username ? (
+                            <PersonalModal
+                                isOpen={isOpen}
+                                handleCancel={handleClose}
+                            />
+                        ) : (
+                            <PublicModal
+                                isOpen={isOpen}
+                                handleCancel={handleClose}
+                            />
+                        )}
+                    </button>
                 </div>
             </div>
             <div className={`${style.post_img}`}>

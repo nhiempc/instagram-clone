@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import CreatePostModal from '../Modal/CreatePost/CreatePostModal';
+import CreatePostModal from '../Modal/CreatePost';
 import style from './Sidebar.module.css';
 
 interface SidebarItemProps {

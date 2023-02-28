@@ -116,6 +116,102 @@ export const footerMenu = [
         content: 'Meta đã xác minh'
     }
 ];
+
+export const PublicModalBtn = [
+    {
+        label: 'Báo cáo',
+        danger: true,
+        action: 'report'
+    },
+    {
+        label: 'Bỏ theo dõi',
+        danger: true,
+        action: 'unfollow'
+    },
+    {
+        label: 'Thêm vào mục yêu thích',
+        danger: false,
+        action: 'add_to_like'
+    },
+    {
+        label: 'Đi tới bài viết',
+        danger: false,
+        action: 'go_to_post'
+    },
+    {
+        label: 'Chia sẻ lên...',
+        danger: false,
+        action: 'share'
+    },
+    {
+        label: 'Sao chép liên kết',
+        danger: false,
+        action: 'copy_link'
+    },
+    {
+        label: 'Nhúng',
+        danger: false,
+        action: 'embed'
+    },
+    {
+        label: 'Giới thiệu về tài khoản này',
+        danger: false,
+        action: 'info'
+    },
+    {
+        label: 'Hủy',
+        danger: false,
+        action: 'cancel'
+    }
+];
+export const PersonalModalBtn = [
+    {
+        label: 'Xóa',
+        danger: true,
+        action: 'detele'
+    },
+    {
+        label: 'Chỉnh sửa',
+        danger: false,
+        action: 'edit'
+    },
+    {
+        label: 'Ẩn lượt thích',
+        danger: false,
+        action: 'hide_like'
+    },
+    {
+        label: 'Tắt tính năng bình luận',
+        danger: false,
+        action: 'off_comment'
+    },
+    {
+        label: 'Đi tới bài viết',
+        danger: false,
+        action: 'go_to_post'
+    },
+    {
+        label: 'Chia sẻ lên...',
+        danger: false,
+        action: 'share'
+    },
+    {
+        label: 'Sao chép liên kết',
+        danger: false,
+        action: 'copy_link'
+    },
+    {
+        label: 'Nhúng',
+        danger: false,
+        action: 'embed'
+    },
+    {
+        label: 'Hủy',
+        danger: false,
+        action: 'cancel'
+    }
+];
+
 export function removeVietnameseTones(str: string) {
     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
     str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');

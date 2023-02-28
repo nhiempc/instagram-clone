@@ -1,0 +1,6 @@
+.PersonalBtn {
+    border-bottom: 1px solid rgb(219, 219, 219);
+    height: 48px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
