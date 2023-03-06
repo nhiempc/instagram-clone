@@ -1,13 +1,6 @@
-import {
-    doc,
-    DocumentData,
-    DocumentSnapshot,
-    getDoc
-} from 'firebase/firestore';
 import Link from 'next/link';
 import React from 'react';
 import style from './LikeCountModal.module.css';
-import { db } from '../../../../firebase';
 
 type UserLikeItemProps = {
     userLike: any;
@@ -16,8 +9,6 @@ type UserLikeItemProps = {
 const UserLikeItem: React.FunctionComponent<UserLikeItemProps> = ({
     userLike
 }) => {
-    //console.log(userLike);
-
     return (
         <div
             className={`${style.userLikeWrapper} flex w-full items-center justify-between px-4 py-4`}

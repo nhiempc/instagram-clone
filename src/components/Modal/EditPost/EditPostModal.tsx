@@ -2,42 +2,45 @@ import React from 'react';
 import { EmojiIcon, LocationIcon, UploadImageIcon } from '@/assets/icons';
 import { Dialog, Transition, Disclosure } from '@headlessui/react';
 import { Fragment } from 'react';
-import style from './CreatePostModal.module.css';
+import style from './EditPostModal.module.css';
 import { useSession } from 'next-auth/react';
 import { removeVietnameseTones } from '@/common';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import {
+    ChevronDownIcon,
+    XCircleIcon,
+    XMarkIcon
+} from '@heroicons/react/20/solid';
 import Picker, { EmojiStyle } from 'emoji-picker-react';
 import { db, storage } from '../../../../firebase';
 import {
-    addDoc,
-    collection,
     doc,
+    DocumentData,
+    getDoc,
     serverTimestamp,
     updateDoc
 } from 'firebase/firestore';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleCreatePostModal } from '@/redux/slices/modal.slice';
 
-type CreatePostModalProps = {
+type EditPostModalProps = {
     isOpen: boolean;
     handleClose: () => void;
+    postId: string;
 };
 
-const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
+const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
     isOpen,
-    handleClose
+    handleClose,
+    postId
 }) => {
     const [selectedFile, setSelectedFile] = React.useState<any>(null);
     const [caption, setCaption] = React.useState<string>('');
     const [loading, setLoading] = React.useState<boolean>(false);
     const [showPicker, setShowPicker] = React.useState(false);
+    const [postInfo, setPostInfo] = React.useState<DocumentData | undefined>(
+        undefined
+    );
 
     const { data: session } = useSession();
-    const dispatch = useDispatch();
-    const isOpenCreatePostModal = useSelector(
-        (state: any) => state.modal.isOpenCreatePostModal
-    );
 
     const filePikerRef = React.useRef<any>(null);
     const captionRef = React.useRef<any>(null);
@@ -47,14 +50,26 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         .join('')
         .toLowerCase();
 
-    const addImageToPost = (e: any) => {
-        const reader = new FileReader();
-        if (e.target.files[0]) {
-            reader.readAsDataURL(e.target.files[0]);
-        }
-        reader.onload = (readerEvent) => {
-            setSelectedFile(readerEvent.target?.result);
+    React.useEffect(() => {
+        const getPostInfo = async (postId: string) => {
+            const userRef = doc(db, 'posts', postId);
+            const res = await getDoc(userRef);
+            setPostInfo(res.data());
         };
+
+        getPostInfo(postId);
+    }, [isOpen]);
+
+    const addImageToPost = (e: any) => {
+        if (!postInfo || selectedFile === null) {
+            const reader = new FileReader();
+            if (e.target.files[0]) {
+                reader.readAsDataURL(e.target.files[0]);
+            }
+            reader.onload = (readerEvent) => {
+                setSelectedFile(readerEvent.target?.result);
+            };
+        }
     };
 
     const handleClickChooseImageButton = () => {
@@ -75,22 +90,25 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         // 2. Get the post ID for the newly created post
         // 3. Upload the image to firebase storage with the post ID
         // 4. Get a download URL from firebase storage and update the original post with image
-        const docRef = await addDoc(collection(db, 'posts'), {
-            username: username,
-            caption: captionRef.current.value,
-            profileImg: session?.user?.image,
-            timestamp: serverTimestamp()
-        });
 
-        const imgRef = ref(storage, `post/${docRef.id}/image`);
-        await uploadString(imgRef, selectedFile, 'data_url').then(
-            async (snapshot) => {
-                const downloadURL = await getDownloadURL(imgRef);
-                await updateDoc(doc(db, 'posts', docRef.id), {
-                    image: downloadURL
-                });
-            }
-        );
+        const imgRef = ref(storage, `post/${postId}/image`);
+        if (postInfo?.image !== selectedFile) {
+            await uploadString(imgRef, selectedFile, 'data_url').then(
+                async (snapshot) => {
+                    const downloadURL = await getDownloadURL(imgRef);
+                    await updateDoc(doc(db, 'posts', postId), {
+                        image: downloadURL,
+                        caption: captionRef.current.value,
+                        timestamp: serverTimestamp()
+                    });
+                }
+            );
+        } else {
+            await updateDoc(doc(db, 'posts', postId), {
+                caption: captionRef.current.value,
+                timestamp: serverTimestamp()
+            });
+        }
         setLoading(false);
         handleClose();
         setSelectedFile(null);
@@ -100,6 +118,9 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
         if (isOpen === false) {
             setSelectedFile(null);
             setCaption('');
+        } else if (postInfo && isOpen) {
+            setSelectedFile(postInfo.image);
+            setCaption(postInfo.caption);
         }
     }, [isOpen]);
 
@@ -146,16 +167,14 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                         >
                                             Hủy bỏ
                                         </button>
-                                        Tạo bài viết mới
+                                        Chỉnh sửa
                                         <button
                                             type='button'
                                             className={`${style.btnShare}`}
                                             onClick={uploadPost}
                                             disabled={loading}
                                         >
-                                            {loading
-                                                ? 'Đang tải lên'
-                                                : 'Chia sẻ'}
+                                            {loading ? 'Đang cập nhật' : 'Lưu'}
                                         </button>
                                     </Dialog.Title>
                                     <div className=''>
@@ -163,7 +182,7 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                             className={`${style.contentWrapper} flex w-full`}
                                         >
                                             <div
-                                                className={`${style.uploadImageArea} flex justify-center items-center w-3/5`}
+                                                className={`${style.uploadImageArea} relative flex justify-center items-center w-3/5`}
                                             >
                                                 {!selectedFile && (
                                                     <div
@@ -197,10 +216,22 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                                     </div>
                                                 )}
                                                 {selectedFile && (
-                                                    <img
-                                                        src={selectedFile.toString()}
-                                                        alt=''
-                                                    />
+                                                    <div
+                                                        className={`${style.imgWrapper} flex`}
+                                                    >
+                                                        <img
+                                                            src={selectedFile.toString()}
+                                                            alt=''
+                                                        />
+                                                        <XMarkIcon
+                                                            onClick={() =>
+                                                                setSelectedFile(
+                                                                    null
+                                                                )
+                                                            }
+                                                            className={`${style.resetImg} absolute top-0 right-0 w-10 h-10 cursor-pointer text-slate-400`}
+                                                        />
+                                                    </div>
                                                 )}
                                             </div>
                                             <div
@@ -402,4 +433,4 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
     );
 };
 
-export default CreatePostModal;
+export default EditPostModal;

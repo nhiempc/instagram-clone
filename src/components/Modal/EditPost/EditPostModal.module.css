@@ -1,0 +1,59 @@
+.contentWrapper {
+    height: 70vh;
+}
+.header,
+.btn,
+.captionLocation {
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+.uploadImageArea {
+    border-right: 1px solid rgb(219, 219, 219);
+    overflow: hidden;
+}
+.uploadImageArea img {
+    z-index: -1;
+}
+.emoji {
+    position: absolute;
+    left: 0;
+    bottom: 16px;
+}
+.captionInput {
+    position: relative;
+    height: 212px;
+}
+.inputCaption {
+    resize: none;
+    min-height: 212px;
+    font-size: 16px;
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+.inputCaption:focus {
+    outline: none;
+}
+.btnCancel,
+.btnShare {
+    padding: 8px 16px;
+    color: rgb(0, 149, 246);
+    font-size: 14px;
+}
+.btnCancel:hover,
+.btnShare:hover {
+    color: black;
+}
+.btnUpload {
+    padding: 7px 16px;
+    background-color: #1877f2;
+    border-radius: 8px;
+    color: white;
+    opacity: 0.8;
+    font-size: 14px;
+    font-weight: 500;
+}
+.captionLocation input {
+    outline: none;
+    padding: 8px 16px;
+}
+.imgWrapper {
+    height: -webkit-fill-available;
+}

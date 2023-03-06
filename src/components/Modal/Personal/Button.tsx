@@ -7,6 +7,7 @@ type ButtonProps = {
     action: string;
     handleCancel: () => void;
     handleDelete: () => void;
+    handleEdit: () => void;
 };
 
 const Button: React.FunctionComponent<ButtonProps> = ({
@@ -14,13 +15,16 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     danger,
     action,
     handleCancel,
-    handleDelete
+    handleDelete,
+    handleEdit
 }) => {
     const handleClick = () => {
         if (action === 'cancel') {
             handleCancel();
         } else if (action === 'delete') {
             handleDelete();
+        } else if (action === 'edit') {
+            handleEdit();
         }
     };
     return (

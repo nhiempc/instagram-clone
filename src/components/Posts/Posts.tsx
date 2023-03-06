@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { faker } from '@faker-js/faker';
 import PostItem from './PostItem';
 import style from './Posts.module.css';
 import {

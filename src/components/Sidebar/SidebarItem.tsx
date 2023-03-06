@@ -19,6 +19,7 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
     btnAction
 }) => {
     const [isOpen, setIsOpen] = React.useState(false);
+
     const handleClick = (e: any) => {
         if (e.currentTarget.id === 'create') {
             setIsOpen(!isOpen);
@@ -61,7 +62,6 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
                 <CreatePostModal
                     isOpen={isOpen}
                     handleClose={handleCloseCreatePostModal}
-                    handleFinishUpload={handleCloseCreatePostModal}
                 />
             </>
         );

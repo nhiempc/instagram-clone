@@ -12,25 +12,30 @@ import {
 import Link from 'next/link';
 import { removeVietnameseTones, TimeAgo } from '@/common';
 import {
-    addDoc,
     collection,
-    deleteDoc,
     doc,
     DocumentData,
+    getDoc,
     onSnapshot,
     orderBy,
     query,
-    serverTimestamp,
-    setDoc
+    serverTimestamp
 } from 'firebase/firestore';
 import PostComments from './PostComments';
-import { db, storage } from '../../../firebase';
+import { db } from '../../../firebase';
 import { useSession } from 'next-auth/react';
 import PersonalModal from '../Modal/Personal/PersonalModal';
 import PublicModal from '../Modal/Public/PublicModal';
-import { deleteObject, ref } from 'firebase/storage';
 import Picker, { EmojiStyle } from 'emoji-picker-react';
 import LikeCountModal from '../Modal/LikeCount/LikeCountModal';
+import { useTypedDispatch } from '@/redux/store';
+import {
+    addCommentToPost,
+    deletePost,
+    likePost,
+    unLikePost
+} from '@/redux/slices/post.slice';
+import EditPostModal from '../Modal/EditPost/EditPostModal';
 
 type PostItemProps = {
     post: DocumentData;
@@ -39,11 +44,13 @@ type PostItemProps = {
 const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [comment, setComment] = useState<string>('');
     const [comments, setComments] = useState<DocumentData[] | undefined>();
-    const [likes, setLikes] = useState<DocumentData[] | undefined>();
-    const [hasLike, setHasLike] = useState<boolean>();
-    const [isOpen, setIsOpen] = React.useState(false);
+    const [likeCount, setLikeCount] = useState<number>(0);
     const [isOpenLikeCountModal, setIsOpenLikeCountModal] =
         React.useState(false);
+    const [isOpenEditPostModal, setIsOpenEditPostModal] = React.useState(false);
+    const [isOpenPersonalModal, setIsOpenPersonalModal] = React.useState(false);
+    const [isOpenPublicModal, setIsOpenPublicModal] = React.useState(false);
+    const [hasLike, setHasLike] = useState<boolean>();
     const [showPicker, setShowPicker] = useState(false);
 
     const onEmojiClick = (emojiObject: any) => {
@@ -51,6 +58,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         setShowPicker(false);
     };
 
+    const typedDispatch = useTypedDispatch();
     const { data: session } = useSession();
     const inputRef = React.useRef<HTMLTextAreaElement>(null);
     const username = removeVietnameseTones(session?.user?.name as string)
@@ -72,20 +80,30 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         e.preventDefault();
         const commentToSend = comment;
         setComment('');
-        await addDoc(collection(db, 'posts', post.id, 'comments'), {
+        const data = {
             comment: commentToSend,
             username: username,
             userImage: session?.user?.image,
             timestamp: serverTimestamp()
-        });
+        };
+        typedDispatch(addCommentToPost(post.id, data));
     };
 
     const handleViewMoreBtnClick = () => {
-        setIsOpen(!isOpen);
+        post.data().username === username
+            ? setIsOpenPersonalModal(!isOpenPersonalModal)
+            : setIsOpenPublicModal(!isOpenPublicModal);
     };
 
-    const handleClose = () => {
-        setIsOpen(!isOpen);
+    const handleClosePersonalModal = () => {
+        setIsOpenPersonalModal(!isOpenPersonalModal);
+    };
+    const handleClosePublicModal = () => {
+        setIsOpenPublicModal(!isOpenPublicModal);
+    };
+    const handleCloseEditPostModal = () => {
+        setIsOpenEditPostModal(!isOpenEditPostModal);
+        setIsOpenPersonalModal(!isOpenPersonalModal);
     };
     const handleShowLikeCount = () => {
         setIsOpenLikeCountModal(!isOpenLikeCountModal);
@@ -95,31 +113,13 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         setIsOpenLikeCountModal(!isOpenLikeCountModal);
     };
 
-    const handleDelete = async () => {
-        const queryComments = query(
-            collection(db, 'posts', post.id, 'comments')
-        );
-        const queryLikes = query(collection(db, 'posts', post.id, 'likes'));
-        const imgRef = ref(storage, `post/${post.id}/image`);
-        onSnapshot(queryComments, (snapshot) =>
-            snapshot.docs.forEach((d) =>
-                deleteDoc(doc(db, 'posts', post.id, 'comments', d.id))
-            )
-        );
-        onSnapshot(queryLikes, (snapshot) =>
-            snapshot.docs.forEach((d) =>
-                deleteDoc(doc(db, 'posts', post.id, 'likes', d.id))
-            )
-        );
-        await deleteObject(imgRef)
-            .then(() => {
-                // File deleted successfully
-            })
-            .catch((error) => {
-                // Uh-oh, an error occurred!
-            });
-        await deleteDoc(doc(db, 'posts', post.id));
-        setIsOpen(!isOpen);
+    const handleDeletePost = async () => {
+        typedDispatch(deletePost(post.id));
+        setIsOpenPersonalModal(!isOpenPersonalModal);
+    };
+
+    const handleEditPost = () => {
+        setIsOpenEditPostModal(!isOpenEditPostModal);
     };
 
     React.useEffect(
@@ -133,36 +133,38 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     setComments(snapshot.docs);
                 }
             ),
-        [db, post.id]
+        [db]
     );
+
     React.useEffect(
         () =>
             onSnapshot(
                 collection(db, 'posts', post.id, 'likes'),
                 (snapshot) => {
-                    setLikes(snapshot.docs);
+                    setLikeCount(snapshot.docs.length);
                 }
             ),
         [db, post.id]
     );
+
     React.useEffect(() => {
-        const index = likes?.findIndex(
-            (item) => item.data().username === username
-        );
-        if (index === -1) {
-            setHasLike(false);
-        } else {
-            setHasLike(true);
-        }
-    }, [likes, db]);
+        const likeRef = doc(db, 'posts', post.id, 'likes', username);
+        const checkLike = async () => {
+            const docSnap = await getDoc(likeRef);
+            if (docSnap.exists()) {
+                setHasLike(true);
+            } else {
+                setHasLike(false);
+            }
+        };
+        checkLike();
+    }, [likeCount, db]);
 
     const handleClickLike = async () => {
         if (hasLike) {
-            await deleteDoc(doc(db, 'posts', post.id, 'likes', username));
+            typedDispatch(unLikePost(post.id, username));
         } else {
-            await setDoc(doc(db, 'posts', post.id, 'likes', username), {
-                username: username
-            });
+            typedDispatch(likePost(post.id, username));
         }
     };
 
@@ -198,14 +200,15 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         <MoreOptionIcon />
                         {post.data().username === username ? (
                             <PersonalModal
-                                isOpen={isOpen}
-                                handleCancel={handleClose}
-                                handleDelete={handleDelete}
+                                isOpen={isOpenPersonalModal}
+                                handleCancel={handleClosePersonalModal}
+                                handleDelete={handleDeletePost}
+                                handleEdit={handleEditPost}
                             />
                         ) : (
                             <PublicModal
-                                isOpen={isOpen}
-                                handleCancel={handleClose}
+                                isOpen={isOpenPublicModal}
+                                handleCancel={handleClosePublicModal}
                             />
                         )}
                     </button>
@@ -245,11 +248,16 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     className={`${style.like_count} mx-2 my-1 cursor-pointer`}
                     onClick={handleShowLikeCount}
                 >
-                    {likes?.length} lượt thích
+                    {likeCount} lượt thích
                 </div>
                 <LikeCountModal
                     isOpen={isOpenLikeCountModal}
                     handleClose={handleCloseLikeCount}
+                    postId={post.id}
+                />
+                <EditPostModal
+                    isOpen={isOpenEditPostModal}
+                    handleClose={handleCloseEditPostModal}
                     postId={post.id}
                 />
                 <div className={`${style.comment_count} mx-2`}>
