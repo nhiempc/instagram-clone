@@ -51,6 +51,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [isOpenPersonalModal, setIsOpenPersonalModal] = React.useState(false);
     const [isOpenPublicModal, setIsOpenPublicModal] = React.useState(false);
     const [hasLike, setHasLike] = useState<boolean>();
+    const [showLike, setShowLike] = useState<boolean>(true);
     const [showPicker, setShowPicker] = useState(false);
 
     const onEmojiClick = (emojiObject: any) => {
@@ -68,6 +69,11 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
 
     const handleChange = (e: any) => {
         setComment(e.target.value);
+    };
+
+    const handleHideLike = () => {
+        setShowLike(!showLike);
+        setIsOpenPersonalModal(!isOpenPersonalModal);
     };
 
     const handleClickCommentIcon = () => {
@@ -204,6 +210,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                                 handleCancel={handleClosePersonalModal}
                                 handleDelete={handleDeletePost}
                                 handleEdit={handleEditPost}
+                                handleHideLike={handleHideLike}
                             />
                         ) : (
                             <PublicModal
@@ -244,12 +251,27 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         </button>
                     </div>
                 </div>
-                <div
-                    className={`${style.like_count} mx-2 my-1 cursor-pointer`}
-                    onClick={handleShowLikeCount}
-                >
-                    {likeCount} lượt thích
-                </div>
+                {username !== post.data().username ||
+                (showLike && username == post.data().username) ? (
+                    <div
+                        className={`${style.like_count} mx-2 my-1 cursor-pointer`}
+                        onClick={handleShowLikeCount}
+                    >
+                        {likeCount} lượt thích
+                    </div>
+                ) : (
+                    <div
+                        className={`${style.like_hidden} mx-2 my-1 cursor-pointer`}
+                    >
+                        Đã ẩn lượt thích{' '}
+                        <span
+                            onClick={() => setShowLike(!showLike)}
+                            className={`${style.showLike}`}
+                        >
+                            Hiện
+                        </span>
+                    </div>
+                )}
                 <LikeCountModal
                     isOpen={isOpenLikeCountModal}
                     handleClose={handleCloseLikeCount}

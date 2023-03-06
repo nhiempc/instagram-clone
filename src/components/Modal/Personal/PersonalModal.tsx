@@ -9,13 +9,15 @@ type PersonalModalProps = {
     handleCancel: () => void;
     handleDelete: () => void;
     handleEdit: () => void;
+    handleHideLike: () => void;
 };
 
 const PersonalModal: React.FC<PersonalModalProps> = ({
     isOpen,
     handleCancel,
     handleDelete,
-    handleEdit
+    handleEdit,
+    handleHideLike
 }) => {
     return (
         <>
@@ -62,6 +64,7 @@ const PersonalModal: React.FC<PersonalModalProps> = ({
                                                 handleCancel={handleCancel}
                                                 handleDelete={handleDelete}
                                                 handleEdit={handleEdit}
+                                                handleHideLike={handleHideLike}
                                             />
                                         ))}
                                     </div>

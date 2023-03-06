@@ -182,7 +182,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                             className={`${style.contentWrapper} flex md:flex-row xs:flex-col xs:overflow-y-scroll w-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100`}
                                         >
                                             <div
-                                                className={`${style.uploadImageArea} relative flex justify-center items-center sm:w-full xs:w-full overflow-scroll scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100 w-3/5`}
+                                                className={`${style.uploadImageArea} relative flex justify-center items-center sm:w-full xs:w-full overflow-scroll scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100 lg:w-3/5`}
                                             >
                                                 {!selectedFile && (
                                                     <div
@@ -235,7 +235,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                                 )}
                                             </div>
                                             <div
-                                                className={`${style.captionArea} flex flex-col sm:w-full xs:w-full w-2/5`}
+                                                className={`${style.captionArea} flex flex-col sm:w-full xs:w-full lg:w-2/5`}
                                             >
                                                 <div
                                                     className={`${style.captionHeader} flex gap-2 mt-[18px] mb-[14px] mx-4 text-[14px] font-medium items-center`}
