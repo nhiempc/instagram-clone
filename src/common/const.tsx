@@ -176,12 +176,12 @@ export const PersonalModalBtn = [
         action: 'edit'
     },
     {
-        label: 'Ẩn lượt thích',
+        label: 'Ẩn/Hiện lượt thích',
         danger: false,
         action: 'hide_like'
     },
     {
-        label: 'Tắt tính năng bình luận',
+        label: 'Tắt/Bật tính năng bình luận',
         danger: false,
         action: 'off_comment'
     },

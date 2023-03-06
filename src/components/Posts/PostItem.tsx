@@ -37,7 +37,9 @@ import {
     unLikePost
 } from '@/redux/slices/post.slice';
 import EditPostModal from '../Modal/EditPost/EditPostModal';
-import { async } from '@firebase/util';
+import Popper from '../Popper';
+import UserPreview from '../UserPreview';
+import Tippy from '@tippyjs/react/headless';
 
 type PostItemProps = {
     post: DocumentData;
@@ -63,8 +65,6 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         setComment((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
-
-    console.log(post.data().showLike);
 
     const typedDispatch = useTypedDispatch();
     const { data: session } = useSession();
@@ -212,27 +212,45 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
             : new Date().getTime()
     );
 
+    const renderPreview = (props: any) => {
+        return (
+            <div tabIndex='-1' {...props}>
+                <Popper>
+                    <UserPreview username={post.data().username} />
+                </Popper>
+            </div>
+        );
+    };
+
     return (
         <div className={`${style.post_item} flex flex-col`}>
             <div className={`${style.post_header} flex items-center`}>
-                <div className={`${style.post_header_left} my-3 mx-1`}>
-                    <div className={`${style.user} flex items-center`}>
-                        <Link href={`/${post.data().username}`}>
-                            <img
-                                src={post.data().profileImg}
-                                alt={post.data().username}
-                                className='rounded-full w-[32px] h-[32px]'
-                            />
-                        </Link>
-                        <div className={`${style.username}`}>
+                <Tippy
+                    interactive
+                    delay={[800, 0]}
+                    offset={[-50, 0]}
+                    placement='bottom'
+                    render={renderPreview}
+                >
+                    <div className={`${style.post_header_left} my-3 mx-1`}>
+                        <div className={`${style.user} flex items-center`}>
                             <Link href={`/${post.data().username}`}>
-                                {post.data().username}
+                                <img
+                                    src={post.data().profileImg}
+                                    alt={post.data().username}
+                                    className='rounded-full w-[32px] h-[32px]'
+                                />
                             </Link>
+                            <div className={`${style.username}`}>
+                                <Link href={`/${post.data().username}`}>
+                                    {post.data().username}
+                                </Link>
+                            </div>
+                            <span>•</span>
+                            <div className={`${style.time}`}>{ago}</div>
                         </div>
-                        <span>•</span>
-                        <div className={`${style.time}`}>{ago}</div>
                     </div>
-                </div>
+                </Tippy>
                 <div className={`${style.post_header_right}`}>
                     <button type='button' onClick={handleViewMoreBtnClick}>
                         <MoreOptionIcon />

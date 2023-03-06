@@ -16,8 +16,6 @@ import {
     updateDoc
 } from 'firebase/firestore';
 import { ref, getDownloadURL, uploadString } from 'firebase/storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleCreatePostModal } from '@/redux/slices/modal.slice';
 
 type CreatePostModalProps = {
     isOpen: boolean;
@@ -34,10 +32,6 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
     const [showPicker, setShowPicker] = React.useState(false);
 
     const { data: session } = useSession();
-    const dispatch = useDispatch();
-    const isOpenCreatePostModal = useSelector(
-        (state: any) => state.modal.isOpenCreatePostModal
-    );
 
     const filePikerRef = React.useRef<any>(null);
     const captionRef = React.useRef<any>(null);

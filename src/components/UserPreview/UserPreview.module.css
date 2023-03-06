@@ -1,0 +1,92 @@
+.wrapper {
+    padding: 16px;
+    background-color: white;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.followBtn {
+    padding: 6px 16px;
+}
+
+.body {
+    margin-top: 12px;
+    color: #161823;
+}
+
+.nickname {
+    font-size: 1.8rem;
+}
+
+.check {
+    font-size: 1.4rem;
+    color: #20d5ec;
+    margin-left: 4px;
+}
+
+.name {
+    font-size: 1.4rem;
+}
+
+.analytics {
+    margin-top: 10px;
+    font-size: 1.8rem;
+}
+
+.value ~ .value {
+    margin-left: 20px;
+}
+
+.label {
+    color: #161823bf;
+}
+.user_avatar {
+    width: 56px;
+    height: 56px;
+}
+.username {
+    color: rgb(38, 38, 38);
+    font-size: 14px;
+    font-weight: 600;
+}
+.user_info {
+    flex-grow: 1;
+}
+.full_name {
+    color: gray;
+    font-size: 14px;
+    font-weight: 500;
+}
+.mesageBtn,
+.followingBtn {
+    background-color: rgb(0, 149, 246);
+    opacity: 0.8;
+    border-radius: 8px;
+    padding: 6px 16px;
+    flex-grow: 1;
+    font-size: 16px;
+}
+.followingBtn {
+    background-color: rgb(239, 239, 239);
+    color: rgb(38, 38, 38);
+    font-weight: 500;
+    opacity: 1;
+}
+.followingBtn:hover {
+    background-color: rgb(229, 229, 229);
+}
+.mesageBtn:hover,
+.followingBtn:hover {
+    opacity: 1;
+}
