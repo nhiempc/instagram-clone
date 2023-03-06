@@ -1,53 +1,62 @@
-.contentWrapper{
+.contentWrapper {
     height: 70vh;
 }
-.header, .btn, .captionLocation{
+.contentWrapper::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+}
+.header,
+.btn,
+.captionLocation {
     border-bottom: 1px solid rgb(219, 219, 219);
 }
-.uploadImageArea{
+.uploadImageArea {
     border-right: 1px solid rgb(219, 219, 219);
-    overflow: hidden;
+    min-height: 300px;
 }
-.uploadImageArea img{
+.uploadImageArea::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+}
+.uploadImageArea img {
     z-index: -1;
 }
-.emoji{
+.emoji {
     position: absolute;
     left: 0;
     bottom: 16px;
 }
-.captionInput{
+.captionInput {
     position: relative;
     height: 212px;
 }
-.inputCaption{
+.inputCaption {
     resize: none;
     min-height: 212px;
     font-size: 16px;
     border-bottom: 1px solid rgb(219, 219, 219);
 }
-.inputCaption:focus{
+.inputCaption:focus {
     outline: none;
 }
-.btnCancel, .btnShare{
+.btnCancel,
+.btnShare {
     padding: 8px 16px;
     color: rgb(0, 149, 246);
     font-size: 14px;
 }
-.btnCancel:hover, .btnShare:hover{
+.btnCancel:hover,
+.btnShare:hover {
     color: black;
 }
-.btnUpload{
+.btnUpload {
     padding: 7px 16px;
-    background-color: #1877F2;
+    background-color: #1877f2;
     border-radius: 8px;
     color: white;
     opacity: 0.8;
     font-size: 14px;
     font-weight: 500;
 }
-.captionLocation input{
+.captionLocation input {
     outline: none;
     padding: 8px 16px;
 }
-

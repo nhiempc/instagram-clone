@@ -20,7 +20,9 @@ const Footer: React.FunctionComponent = () => {
         setSuggestUserList(suggestUserList);
     }, []);
     return (
-        <div className={`${style.footer_wrapper} w-2/5 px-3`}>
+        <div
+            className={`${style.footer_wrapper} lg:w-1/3 md:w-2/5 lg:block sm:hidden xs:hidden px-3`}
+        >
             <FooterUser />
             <FooterSuggestUser suggestUserList={suggestUserList} />
             <FooterContent />

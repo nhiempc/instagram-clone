@@ -28,7 +28,7 @@ const SidebarUser: React.FunctionComponent<SidebarUserProps> = ({
                 />
             </div>
             <div
-                className={`${style.sidebar_content} pl-4 lg:visible md:invisible sm:invisible`}
+                className={`${style.sidebar_content} pl-4 lg:block md:hidden sm:hidden xs:hidden`}
             >
                 Trang cá nhân
             </div>

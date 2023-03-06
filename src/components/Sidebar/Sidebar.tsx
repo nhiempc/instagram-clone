@@ -10,10 +10,47 @@ import SidebarUser from './SidebarUser';
 const Sidebar: React.FunctionComponent = () => {
     return (
         <div
-            className={`${style.sidebar_wrapper} flex flex-col w-1/6 px-3 pt-2 pb-5`}
+            className={`${style.sidebar_wrapper} flex flex-col lg:w-1/6 px-3 pt-2 pb-5`}
         >
-            <Link href={'/'} className='logo pt-6 pb-4 px-3'>
-                <Image src={images.logo} alt='logo' priority />
+            <Link href={'/'} className={`${style.logo} pt-6 pb-4 px-3`}>
+                {/* <Image src={images.logo} alt='logo' priority /> */}
+                <picture>
+                    <source
+                        type='image/svg+xml'
+                        media='(min-width: 1024px)'
+                        srcSet={images.logo.src}
+                        width={images.logo.width}
+                        height={images.logo.height}
+                    />
+                    <source
+                        type='image/svg+xml'
+                        media='(min-width: 768px)'
+                        srcSet={images.logo2.src}
+                        width={images.logo2.width}
+                        height={images.logo2.height}
+                    />
+                    <source
+                        type='image/svg+xml'
+                        media='(min-width: 640px)'
+                        srcSet={images.logo2.src}
+                        width={images.logo2.width}
+                        height={images.logo2.height}
+                    />
+                    <source
+                        type='image/svg+xml'
+                        media='(min-width: 0px)'
+                        srcSet={images.logo2.src}
+                        width={images.logo2.width}
+                        height={images.logo2.height}
+                    />
+                    <Image
+                        src={images.logo}
+                        alt='logo'
+                        priority
+                        width={images.logo.width}
+                        height={images.logo.height}
+                    />
+                </picture>
             </Link>
             {menu.map((item, index) => (
                 <SidebarItem

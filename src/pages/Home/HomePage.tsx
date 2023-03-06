@@ -20,7 +20,7 @@ const HomePage: React.FunctionComponent = () => {
         session && (
             <Layout>
                 <Content>
-                    <div className='main_content w-3/5 mr-[64px]'>
+                    <div className='main_content md:w-full lg:w-2/3 sm:w-full xs:w-full lg:mr-[64px]'>
                         <Stories />
                         <Posts />
                     </div>

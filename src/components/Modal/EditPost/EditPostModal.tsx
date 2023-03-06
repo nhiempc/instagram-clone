@@ -179,10 +179,10 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                     </Dialog.Title>
                                     <div className=''>
                                         <div
-                                            className={`${style.contentWrapper} flex w-full`}
+                                            className={`${style.contentWrapper} flex md:flex-row xs:flex-col xs:overflow-y-scroll w-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100`}
                                         >
                                             <div
-                                                className={`${style.uploadImageArea} relative flex justify-center items-center w-3/5`}
+                                                className={`${style.uploadImageArea} relative flex justify-center items-center sm:w-full xs:w-full overflow-scroll scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100 w-3/5`}
                                             >
                                                 {!selectedFile && (
                                                     <div
@@ -217,7 +217,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                                 )}
                                                 {selectedFile && (
                                                     <div
-                                                        className={`${style.imgWrapper} flex`}
+                                                        className={`${style.imgWrapper} flex xs:w-full`}
                                                     >
                                                         <img
                                                             src={selectedFile.toString()}
@@ -235,7 +235,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                                 )}
                                             </div>
                                             <div
-                                                className={`${style.captionArea} flex flex-col w-2/5`}
+                                                className={`${style.captionArea} flex flex-col sm:w-full xs:w-full w-2/5`}
                                             >
                                                 <div
                                                     className={`${style.captionHeader} flex gap-2 mt-[18px] mb-[14px] mx-4 text-[14px] font-medium items-center`}
@@ -320,7 +320,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                                             {({ open }) => (
                                                                 <>
                                                                     <Disclosure.Button
-                                                                        className={`${style.btn} flex w-full justify-between rounded-lg py-2 px-4 text-left text-[16px] font-normal`}
+                                                                        className={`${style.btn} flex w-full justify-between py-2 px-4 text-left text-[16px] font-normal`}
                                                                     >
                                                                         <span>
                                                                             Trợ
@@ -364,7 +364,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                                             {({ open }) => (
                                                                 <>
                                                                     <Disclosure.Button
-                                                                        className={`${style.btn} flex w-full justify-between rounded-lg py-2 px-4 text-left text-[16px] font-normal`}
+                                                                        className={`${style.btn} flex w-full justify-between py-2 px-4 text-left text-[16px] font-normal`}
                                                                     >
                                                                         <span>
                                                                             Cài

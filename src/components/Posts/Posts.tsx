@@ -26,7 +26,7 @@ const Posts: React.FunctionComponent = () => {
     );
 
     return (
-        <div className={`${style.post_wrapper}`}>
+        <div className={`${style.post_wrapper} md:w-4/5 mx-auto`}>
             {posts?.map((post: DocumentData) => (
                 <PostItem key={post.id} post={post} />
             ))}

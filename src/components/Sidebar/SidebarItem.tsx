@@ -37,7 +37,7 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
             >
                 <div className={style.sidebar_icon}>{icon}</div>
                 <div
-                    className={`${style.sidebar_content} pl-4 lg:visible md:invisible sm:invisible`}
+                    className={`${style.sidebar_content} pl-4 lg:block md:hidden sm:hidden xs:hidden`}
                 >
                     {content}
                 </div>
@@ -50,11 +50,11 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
                     type='button'
                     id={btnAction}
                     onClick={handleClick}
-                    className={`${style.nav_item} flex items-center p-3`}
+                    className={`${style.nav_item} flex items-center w-full p-3`}
                 >
                     <div className={style.sidebar_icon}>{icon}</div>
                     <div
-                        className={`${style.sidebar_content} pl-4 lg:visible md:invisible sm:invisible`}
+                        className={`${style.sidebar_content} pl-4 lg:block md:hidden sm:hidden xs:hidden`}
                     >
                         {content}
                     </div>

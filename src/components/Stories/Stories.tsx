@@ -28,7 +28,7 @@ const Stories: React.FunctionComponent = () => {
     }, []);
     return (
         <div
-            className={`${style.story_wrapper} flex p-6 mt-8 overflow-x-scroll scrollbar-thin scrollbar-thumb-slate-500 scrollbar-track-gray-100`}
+            className={`${style.story_wrapper} flex p-6 lg:mt-2 xs:mt-0 overflow-x-scroll scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100`}
         >
             {suggestion?.map((profile) => (
                 <StoryItem

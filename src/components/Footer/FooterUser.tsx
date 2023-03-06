@@ -21,7 +21,7 @@ const FooterUser: React.FunctionComponent = ({}) => {
 
     return (
         <div
-            className={`${style.footer_user} flex w-full items-center mt-8 pt-6 mb-3`}
+            className={`${style.footer_user} flex w-full items-center lg:mt-2 xs:mt-0 pt-6 mb-3`}
         >
             <Link href={`/${username}`} className={`${style.user_avatar}`}>
                 <img

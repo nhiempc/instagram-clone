@@ -1,22 +1,22 @@
-.nav_item:hover{
+.nav_item:hover,
+.setting_area button:hover {
     background-color: rgb(240, 240, 240);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.5s;
 }
-.sidebar_wrapper{
+.sidebar_wrapper {
     border-right: 1px solid rgb(219, 219, 219);
     height: 100vh;
-    position: relative;
     border-bottom: 1px solid rgb(219, 219, 219);
     position: sticky;
     top: 0;
 }
-.nav_item:hover .sidebar_icon{
-    scale: 1.10;
+.nav_item:hover .sidebar_icon {
+    scale: 1.1;
     transition: all 0.25s ease-out;
 }
-.setting_area{
+.setting_area {
     position: absolute;
     bottom: 30px;
     left: 0;
