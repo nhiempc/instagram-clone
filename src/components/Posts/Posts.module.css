@@ -104,11 +104,16 @@
 .postCommentWrapper::-webkit-scrollbar {
     width: 5px;
 }
-.like_hidden {
+.like_hidden,
+.comment_hide {
     color: rgb(142, 142, 142);
     font-size: 14px;
     font-weight: 500;
 }
-.showLike {
+.showLike,
+.showComment {
     color: rgb(0, 149, 246);
+}
+.whenOffComment {
+    border: 1px solid;
 }

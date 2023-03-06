@@ -19,7 +19,8 @@ import {
     onSnapshot,
     orderBy,
     query,
-    serverTimestamp
+    serverTimestamp,
+    updateDoc
 } from 'firebase/firestore';
 import PostComments from './PostComments';
 import { db } from '../../../firebase';
@@ -36,6 +37,7 @@ import {
     unLikePost
 } from '@/redux/slices/post.slice';
 import EditPostModal from '../Modal/EditPost/EditPostModal';
+import { async } from '@firebase/util';
 
 type PostItemProps = {
     post: DocumentData;
@@ -51,13 +53,18 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [isOpenPersonalModal, setIsOpenPersonalModal] = React.useState(false);
     const [isOpenPublicModal, setIsOpenPublicModal] = React.useState(false);
     const [hasLike, setHasLike] = useState<boolean>();
-    const [showLike, setShowLike] = useState<boolean>(true);
+    const [showLike, setShowLike] = useState<boolean>(post.data().showLike);
+    const [showComment, setShowComment] = useState<boolean>(
+        post.data().showComment
+    );
     const [showPicker, setShowPicker] = useState(false);
 
     const onEmojiClick = (emojiObject: any) => {
         setComment((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
+
+    console.log(post.data().showLike);
 
     const typedDispatch = useTypedDispatch();
     const { data: session } = useSession();
@@ -71,8 +78,33 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         setComment(e.target.value);
     };
 
-    const handleHideLike = () => {
+    const handleShowLike = async () => {
+        await updateDoc(doc(db, 'posts', post.id), {
+            showLike: !post.data().showLike
+        });
         setShowLike(!showLike);
+    };
+
+    const handleHideLike = async () => {
+        await updateDoc(doc(db, 'posts', post.id), {
+            showLike: !post.data().showLike
+        });
+        setShowLike(!showLike);
+        setIsOpenPersonalModal(!isOpenPersonalModal);
+    };
+
+    const handleShowComment = async () => {
+        await updateDoc(doc(db, 'posts', post.id), {
+            showComment: !post.data().showComment
+        });
+        setShowComment(!showComment);
+    };
+
+    const handleHideComment = async () => {
+        await updateDoc(doc(db, 'posts', post.id), {
+            showComment: !post.data().showComment
+        });
+        setShowComment(!showComment);
         setIsOpenPersonalModal(!isOpenPersonalModal);
     };
 
@@ -211,6 +243,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                                 handleDelete={handleDeletePost}
                                 handleEdit={handleEditPost}
                                 handleHideLike={handleHideLike}
+                                handleHideComment={handleHideComment}
                             />
                         ) : (
                             <PublicModal
@@ -251,8 +284,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         </button>
                     </div>
                 </div>
-                {username !== post.data().username ||
-                (showLike && username == post.data().username) ? (
+                {showLike ? (
                     <div
                         className={`${style.like_count} mx-2 my-1 cursor-pointer`}
                         onClick={handleShowLikeCount}
@@ -264,12 +296,14 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         className={`${style.like_hidden} mx-2 my-1 cursor-pointer`}
                     >
                         Đã ẩn lượt thích{' '}
-                        <span
-                            onClick={() => setShowLike(!showLike)}
-                            className={`${style.showLike}`}
-                        >
-                            Hiện
-                        </span>
+                        {post.data().username === username && (
+                            <span
+                                onClick={handleShowLike}
+                                className={`${style.showLike}`}
+                            >
+                                Hiện
+                            </span>
+                        )}
                     </div>
                 )}
                 <LikeCountModal
@@ -282,9 +316,24 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     handleClose={handleCloseEditPostModal}
                     postId={post.id}
                 />
-                <div className={`${style.comment_count} mx-2`}>
-                    {comments?.length} lượt bình luận
-                </div>
+                {showComment ? (
+                    <div className={`${style.comment_count} mx-2`}>
+                        {comments?.length} lượt bình luận
+                    </div>
+                ) : (
+                    <div className={`${style.comment_hide} mx-2`}>
+                        Đã ẩn lượt bình luận{' '}
+                        {post.data().username === username && (
+                            <span
+                                onClick={handleShowComment}
+                                className={`${style.showComment} cursor-pointer`}
+                            >
+                                Hiện
+                            </span>
+                        )}
+                    </div>
+                )}
+
                 <div className={`${style.post_caption} mx-2`}>
                     <span className={`${style.username_2}`}>
                         <Link href={`/${post.data().username}`}>
@@ -293,49 +342,58 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                     </span>
                     {post.data().caption}
                 </div>
-                <PostComments comments={comments} />
+                {showComment && <PostComments comments={comments} />}
             </div>
-            <div className={`${style.add_comment} w-full mt-2 mx-2`}>
-                <form action='' className='flex items-center gap-2'>
-                    <textarea
-                        ref={inputRef}
-                        name='add_comment'
-                        id='add_comment'
-                        placeholder='Thêm bình luận...'
-                        value={comment}
-                        onChange={handleChange}
-                    ></textarea>
+            {showComment && (
+                <div className={`${style.add_comment} w-full mt-2 mx-2`}>
+                    <form action='' className='flex items-center gap-2'>
+                        <textarea
+                            ref={inputRef}
+                            name='add_comment'
+                            id='add_comment'
+                            placeholder='Thêm bình luận...'
+                            value={comment}
+                            onChange={handleChange}
+                        ></textarea>
 
-                    <div className='flex gap-2 items-center cursor-pointer'>
-                        {comment && (
-                            <button
-                                onClick={handleAddComment}
-                                className={`${style.post_comment_btn}`}
-                            >
-                                Đăng
-                            </button>
-                        )}
-                        <div className='addEmojiWrapper relative'>
-                            <button
-                                type='button'
-                                className='addEmojiBtn align-middle'
-                                onClick={() => setShowPicker((val) => !val)}
-                            >
-                                <EmojiIcon width='16' height='16' />
-                            </button>
-                            {showPicker && (
-                                <div className='emojiPiker absolute top-[-450px] left-0 z-10'>
-                                    <Picker
-                                        emojiStyle={EmojiStyle.FACEBOOK}
-                                        width={'100%'}
-                                        onEmojiClick={onEmojiClick}
-                                    />
-                                </div>
+                        <div className='flex gap-2 items-center cursor-pointer'>
+                            {comment && (
+                                <button
+                                    onClick={handleAddComment}
+                                    className={`${style.post_comment_btn}`}
+                                >
+                                    Đăng
+                                </button>
                             )}
+                            <div className='addEmojiWrapper relative'>
+                                <button
+                                    type='button'
+                                    className='addEmojiBtn align-middle'
+                                    onClick={() => setShowPicker((val) => !val)}
+                                >
+                                    <EmojiIcon width='16' height='16' />
+                                </button>
+                                {showPicker && (
+                                    <div className='emojiPiker absolute top-[-450px] left-0 z-10'>
+                                        <Picker
+                                            emojiStyle={EmojiStyle.FACEBOOK}
+                                            width={'100%'}
+                                            onEmojiClick={onEmojiClick}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+            )}
+            {post.data().username !== username && showComment === false && (
+                <div
+                    className={`${style.whenOffComment} w-full mt-2 p-2 text-red-500 text-center text-[14px] font-medium border-stone-400`}
+                >
+                    <p>Chủ sở hữu đã tắt tính năng bình luận</p>
+                </div>
+            )}
         </div>
     );
 };
