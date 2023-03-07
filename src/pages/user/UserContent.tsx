@@ -69,8 +69,6 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
         'Được gắn thẻ': []
     };
 
-    console.log(postByID);
-
     return (
         <>
             <div className={`${style.contentWrapper} w-full`}>
