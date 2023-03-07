@@ -1,4 +1,4 @@
-import HomePage from '@/pages/home';
+import HomePage from '@/pages/Home';
 import Head from 'next/head';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';

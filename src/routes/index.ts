@@ -1,5 +1,5 @@
 // Pages
-import Home from '../pages/home';
+import Home from '../pages/Home';
 import Profile from '../pages/user/[username]';
 import Login from '../pages/auth/signin';
 
