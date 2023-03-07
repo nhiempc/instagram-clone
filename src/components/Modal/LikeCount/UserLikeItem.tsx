@@ -15,7 +15,7 @@ const UserLikeItem: React.FunctionComponent<UserLikeItemProps> = ({
         >
             <div className={`${style.user} flex items-center`}>
                 <div className={`${style.userLikeImg} w-[44px] h-[44px] mr-3`}>
-                    <Link href={`${userLike.username}`}>
+                    <Link href={`user/${userLike.username}`}>
                         <img
                             className='rounded-full'
                             src={userLike.profileImg}
@@ -24,7 +24,7 @@ const UserLikeItem: React.FunctionComponent<UserLikeItemProps> = ({
                     </Link>
                 </div>
                 <div className={`${style.userLikeInfo} flex flex-col`}>
-                    <Link href={`${userLike.username}`}>
+                    <Link href={`user/${userLike.username}`}>
                         <span className='font-medium'>{userLike.username}</span>
                     </Link>
                     <p className='text-gray-500'>{userLike.name}</p>

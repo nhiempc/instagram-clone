@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-const HomePage: React.FunctionComponent = () => {
+export default function HomePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const loading = status === 'loading';
@@ -20,7 +20,7 @@ const HomePage: React.FunctionComponent = () => {
         session && (
             <Layout>
                 <Content>
-                    <div className='main_content md:w-full lg:w-2/3 sm:w-full xs:w-full lg:mr-[64px]'>
+                    <div className='main_content md:w-full lg:w-2/3 sm:w-full xs:w-full lg:mr-[40px]'>
                         <Stories />
                         <Posts />
                     </div>
@@ -29,6 +29,4 @@ const HomePage: React.FunctionComponent = () => {
             </Layout>
         )
     );
-};
-
-export default HomePage;
+}

@@ -15,7 +15,7 @@ const FooterSuggestUserItem: React.FunctionComponent<
             className={`${style.suggest_user_item} flex w-full items-center py-1`}
         >
             <Link
-                href={`/${suggestUser.username}`}
+                href={`user/${suggestUser.username}`}
                 className={`${style.suggest_user_avatar}`}
             >
                 <img
@@ -26,7 +26,7 @@ const FooterSuggestUserItem: React.FunctionComponent<
             </Link>
             <div className={`${style.user_info} flex flex-col ml-5`}>
                 <Link
-                    href={`/${suggestUser.username}`}
+                    href={`user/${suggestUser.username}`}
                     className={`${style.username}`}
                 >
                     {suggestUser.username}

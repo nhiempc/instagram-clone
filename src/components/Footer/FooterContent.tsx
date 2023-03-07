@@ -16,7 +16,7 @@ const FooterContent: React.FunctionComponent = () => {
                 ))}
             </ul>
             <span className={`${style.copyright}`}>
-                © 2023 Instagram from Meta
+                © 2023 Instagram clone by nhiempc
             </span>
         </div>
     );

@@ -23,7 +23,7 @@ const FooterUser: React.FunctionComponent = ({}) => {
         <div
             className={`${style.footer_user} flex w-full items-center lg:mt-2 xs:mt-0 pt-6 mb-3`}
         >
-            <Link href={`/${username}`} className={`${style.user_avatar}`}>
+            <Link href={`/user/${username}`} className={`${style.user_avatar}`}>
                 <img
                     src={session?.user?.image || undefined}
                     alt={session?.user?.name || undefined}
@@ -31,7 +31,7 @@ const FooterUser: React.FunctionComponent = ({}) => {
                 />
             </Link>
             <div className={`${style.user_info} flex flex-col ml-5`}>
-                <Link href={username}>{username}</Link>
+                <Link href={`/user/${username}`}>{username}</Link>
                 <div className={`${style.full_name}`}>
                     {session?.user?.name}
                 </div>

@@ -116,7 +116,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
             <div className={`${style.header}`}>
                 <div className={`${style.user} flex w-full items-center`}>
                     <Link
-                        href={`/${user?.username}`}
+                        href={`/user/${user?.username}`}
                         className={`${style.user_avatar}`}
                     >
                         <img
@@ -126,7 +126,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
                         />
                     </Link>
                     <div className={`${style.user_info} flex flex-col ml-5`}>
-                        <Link href={`/${user?.username}`}>
+                        <Link href={`/user/${user?.username}`}>
                             {user?.username}
                         </Link>
                         <div className={`${style.full_name}`}>{user?.name}</div>

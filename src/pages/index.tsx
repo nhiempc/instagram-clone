@@ -1,5 +1,8 @@
-import HomePage from '@/pages/Home';
+import HomePage from '@/pages/home';
 import Head from 'next/head';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { publicRoutes } from '../routes';
 
 export default function Home() {
     return (
@@ -17,6 +20,20 @@ export default function Home() {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <main>
+                {/* <Router>
+                    <Routes>
+                        {publicRoutes.map((route, index) => {
+                            const Page = route.component;
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={<Page />}
+                                />
+                            );
+                        })}
+                    </Routes>
+                </Router> */}
                 <HomePage />
             </main>
         </>

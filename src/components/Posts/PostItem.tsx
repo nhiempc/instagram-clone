@@ -225,32 +225,43 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     return (
         <div className={`${style.post_item} flex flex-col`}>
             <div className={`${style.post_header} flex items-center`}>
-                <Tippy
-                    interactive
-                    delay={[800, 0]}
-                    offset={[-50, 0]}
-                    placement='bottom'
-                    render={renderPreview}
-                >
-                    <div className={`${style.post_header_left} my-3 mx-1`}>
-                        <div className={`${style.user} flex items-center`}>
-                            <Link href={`/${post.data().username}`}>
-                                <img
-                                    src={post.data().profileImg}
-                                    alt={post.data().username}
-                                    className='rounded-full w-[32px] h-[32px]'
-                                />
-                            </Link>
-                            <div className={`${style.username}`}>
-                                <Link href={`/${post.data().username}`}>
-                                    {post.data().username}
+                <div>
+                    <Tippy
+                        interactive
+                        delay={[800, 0]}
+                        offset={[-50, 0]}
+                        placement='bottom'
+                        render={renderPreview}
+                    >
+                        <div className={`${style.post_header_left} my-3 mx-1`}>
+                            <div className={`${style.user} flex items-center`}>
+                                <Link
+                                    href={{
+                                        pathname: `user/${
+                                            post.data().username
+                                        }`,
+                                        query: {
+                                            username: post.data().username
+                                        }
+                                    }}
+                                >
+                                    <img
+                                        src={post.data().profileImg}
+                                        alt={post.data().username}
+                                        className='rounded-full w-[32px] h-[32px]'
+                                    />
                                 </Link>
+                                <div className={`${style.username}`}>
+                                    <Link href={`user/${post.data().username}`}>
+                                        {post.data().username}
+                                    </Link>
+                                </div>
+                                <span>•</span>
+                                <div className={`${style.time}`}>{ago}</div>
                             </div>
-                            <span>•</span>
-                            <div className={`${style.time}`}>{ago}</div>
                         </div>
-                    </div>
-                </Tippy>
+                    </Tippy>
+                </div>
                 <div className={`${style.post_header_right}`}>
                     <button type='button' onClick={handleViewMoreBtnClick}>
                         <MoreOptionIcon />
@@ -354,7 +365,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
 
                 <div className={`${style.post_caption} mx-2`}>
                     <span className={`${style.username_2}`}>
-                        <Link href={`/${post.data().username}`}>
+                        <Link href={`user/${post.data().username}`}>
                             {post.data().username}
                         </Link>
                     </span>

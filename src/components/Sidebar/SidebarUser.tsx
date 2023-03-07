@@ -15,7 +15,7 @@ const SidebarUser: React.FunctionComponent<SidebarUserProps> = ({
     const { data: session } = useSession();
     return (
         <Link
-            href={`/${userName}`}
+            href={`/user/${userName}`}
             className={`${style.nav_item} flex items-center p-3`}
         >
             <div className={style.sidebar_icon}>

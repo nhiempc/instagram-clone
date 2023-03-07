@@ -1,19 +1,25 @@
 import Image from 'next/image';
 import React from 'react';
 import images from '@/assets/images';
-import { menu, setting } from '@/common';
+import { menu, removeVietnameseTones, setting } from '@/common';
 import SidebarItem from './SidebarItem';
 import style from './Sidebar.module.css';
 import Link from 'next/link';
 import SidebarUser from './SidebarUser';
+import { useSession } from 'next-auth/react';
 
 const Sidebar: React.FunctionComponent = () => {
+    const { data: session } = useSession();
+
+    const username = removeVietnameseTones(session?.user?.name as string)
+        .split(' ')
+        .join('')
+        .toLowerCase();
     return (
         <div
             className={`${style.sidebar_wrapper} flex flex-col w-fit lg:w-1/6 px-3 pt-2 pb-5`}
         >
             <Link href={'/'} className={`${style.logo} pt-6 pb-4 px-3`}>
-                {/* <Image src={images.logo} alt='logo' priority /> */}
                 <picture>
                     <source
                         type='image/svg+xml'
@@ -62,7 +68,10 @@ const Sidebar: React.FunctionComponent = () => {
                     btnAction={item.btnAction}
                 />
             ))}
-            <SidebarUser image={images.avatar.default.src} userName='nhiempc' />
+            <SidebarUser
+                image={images.avatar.default.src}
+                userName={username}
+            />
             <div className={`${style.setting_area} w-full px-3`}>
                 <SidebarItem
                     key={'setting'}

@@ -18,7 +18,7 @@ import { db } from '../../../firebase';
 import { removeVietnameseTones } from '@/common';
 
 // Browser
-function SignIn() {
+export default function SignIn() {
     const [provider, setProvider] = React.useState<
         Record<string, ClientSafeProvider>
     >({});
@@ -57,7 +57,7 @@ function SignIn() {
         addUser();
         router.push('/');
     }
-    if (!session)
+    if (!session) {
         return (
             <>
                 <div className={`${style.login_wrapper}`}>
@@ -151,6 +151,7 @@ function SignIn() {
                 </div>
             </>
         );
+    } else {
+        return null;
+    }
 }
-
-export default SignIn;
