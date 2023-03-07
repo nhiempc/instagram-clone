@@ -1,0 +1,82 @@
+.contentWrapper {
+    height: 90vh;
+}
+.contentWrapper::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+}
+.post_header,
+.header,
+.contentWrapper,
+.timeAgo {
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+.post_header_left {
+    flex-grow: 1;
+}
+.uploadImageArea {
+    border-right: 1px solid rgb(219, 219, 219);
+    min-height: 300px;
+}
+.uploadImageArea::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+}
+.uploadImageArea img {
+    z-index: -1;
+}
+.btnCancel,
+.btnShare {
+    padding: 8px 16px;
+    color: rgb(0, 149, 246);
+    font-size: 14px;
+}
+.btnCancel:hover,
+.btnShare:hover {
+    color: black;
+}
+.user span {
+    margin: 0px 5px;
+}
+.user,
+.userCaption .username {
+    color: rgb(38, 38, 38);
+    font-size: 14px;
+    font-weight: 600;
+}
+.user:hover,
+.userCaption .username:hover {
+    color: gray;
+}
+.username {
+    padding-left: 15px;
+}
+.post_header_right {
+    cursor: pointer;
+}
+.commentWrapper,
+.interact_left,
+.inputCmt,
+.wrapContent {
+    flex-grow: 1;
+}
+.userCaption .username {
+    padding-left: 0;
+    padding-right: 4px;
+}
+.btn {
+    padding-right: 16px;
+}
+.btn_save {
+    padding-right: 0;
+}
+.timeAgo {
+    color: rgb(142, 142, 142);
+}
+.addCmtBtn {
+    color: rgb(0, 149, 246);
+}
+.addCmtBtn:hover {
+    color: black;
+}
+.userImg {
+    flex-shrink: 0;
+}

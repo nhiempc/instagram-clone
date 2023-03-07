@@ -1,6 +1,6 @@
 import React from 'react';
 import { DocumentData } from 'firebase/firestore';
-import style from './UserHeader.module.css';
+import style from './[username].module.css';
 import { AddFollowIcon } from '@/assets/icons';
 
 type UserHeaderProps = {

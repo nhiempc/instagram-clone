@@ -76,12 +76,12 @@ const LikeCountModal: React.FunctionComponent<LikeCountModalProps> = ({
                                     >
                                         <button
                                             type='button'
-                                            className={`${style.btnNone}`}
+                                            className={`${style.btnNone} outline-none`}
                                         ></button>
                                         Lượt thích
                                         <button
                                             type='button'
-                                            className={`${style.btnCancel}`}
+                                            className={`${style.btnCancel} outline-none`}
                                             onClick={handleClose}
                                         >
                                             <CloseIcon width='18' height='18' />

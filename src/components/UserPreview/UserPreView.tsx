@@ -37,6 +37,8 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         .toLowerCase();
 
     React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
         const getuserInfo = async (username: string) => {
             const userRef = doc(db, 'users', username);
             const res = await getDoc(userRef);
@@ -46,21 +48,20 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         getuserInfo(username);
     }, [db]);
 
-    React.useEffect(
-        () =>
-            onSnapshot(
-                query(
-                    collection(db, 'posts'),
-                    where('username', '==', username)
-                ),
-                (snapshot) => {
-                    setPostCount(snapshot.docs.length);
-                }
-            ),
-        [db]
-    );
+    React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
+        onSnapshot(
+            query(collection(db, 'posts'), where('username', '==', username)),
+            (snapshot) => {
+                setPostCount(snapshot.docs.length);
+            }
+        );
+    }, [db]);
 
     React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
         const followRef = doc(db, 'users', usernamesession, 'follow', username);
         const checkFollow = async () => {
             const docSnap = await getDoc(followRef);
@@ -73,27 +74,24 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         checkFollow();
     }, [db, username, followerCount]);
 
-    React.useEffect(
-        () =>
-            onSnapshot(
-                collection(db, 'users', username, 'follower'),
-                (snapshot) => {
-                    setFollowerCount(snapshot.docs.length);
-                }
-            ),
-        [db]
-    );
+    React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
+        onSnapshot(
+            collection(db, 'users', username, 'follower'),
+            (snapshot) => {
+                setFollowerCount(snapshot.docs.length);
+            }
+        );
+    }, [db]);
 
-    React.useEffect(
-        () =>
-            onSnapshot(
-                collection(db, 'users', username, 'follow'),
-                (snapshot) => {
-                    setFollowCount(snapshot.docs.length);
-                }
-            ),
-        [db]
-    );
+    React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
+        onSnapshot(collection(db, 'users', username, 'follow'), (snapshot) => {
+            setFollowCount(snapshot.docs.length);
+        });
+    }, [db]);
 
     const handleAddFollow = async () => {
         await setDoc(doc(db, 'users', usernamesession, 'follow', username), {

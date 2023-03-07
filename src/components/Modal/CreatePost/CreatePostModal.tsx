@@ -135,7 +135,7 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
                                     >
                                         <button
                                             type='button'
-                                            className={`${style.btnCancel}`}
+                                            className={`${style.btnCancel} outline-none`}
                                             onClick={handleClose}
                                         >
                                             Hủy bỏ

@@ -162,7 +162,7 @@ const EditPostModal: React.FunctionComponent<EditPostModalProps> = ({
                                     >
                                         <button
                                             type='button'
-                                            className={`${style.btnCancel}`}
+                                            className={`${style.btnCancel} outline-none`}
                                             onClick={handleClose}
                                         >
                                             Hủy bỏ
