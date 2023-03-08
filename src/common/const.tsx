@@ -303,3 +303,10 @@ export const TimeAgo = (function () {
 
     return self;
 })();
+
+export function timestampToDate(timestamp: number) {
+    const dateFormat = new Date(timestamp);
+    return `Ngày ${dateFormat.getDate()} tháng ${
+        dateFormat.getMonth() + 1
+    } năm ${dateFormat.getFullYear()}`;
+}

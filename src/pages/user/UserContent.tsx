@@ -56,7 +56,7 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
         if (!postID) return;
         if (typeof postID === 'object') return;
 
-        router.push(`/user?post=${postID}`, undefined, {
+        router.push(`/user?postId=${postID}`, undefined, {
             shallow: true
         });
         setIsOpenPostDetailModal(!isOpenPostDetailModal);

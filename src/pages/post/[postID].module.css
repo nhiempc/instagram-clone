@@ -58,6 +58,9 @@
 .wrapContent {
     flex-grow: 1;
 }
+.commentWrapper .username {
+    padding-left: 0;
+}
 .userCaption .username {
     padding-left: 0;
     padding-right: 4px;
@@ -71,8 +74,22 @@
 .timeAgo {
     color: rgb(142, 142, 142);
 }
-.addCmtBtn {
+.deleteBtn,
+.reportBtn {
+    display: none;
+}
+.addCmtBtn,
+.userComment:hover .deleteBtn {
+    display: block;
     color: rgb(0, 149, 246);
+}
+.userComment:hover {
+    background-color: rgb(241, 241, 241);
+    border-radius: 8px;
+}
+.userComment:hover .reportBtn {
+    display: block;
+    color: rgb(237, 73, 86);
 }
 .addCmtBtn:hover {
     color: black;

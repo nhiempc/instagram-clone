@@ -16,6 +16,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import UserContent from './UserContent';
+import { useTypedDispatch } from '@/redux/store';
+import { addFollow, unFollow } from '@/redux/slices/user.slice';
 
 export default function UserPage() {
     const { data: session, status } = useSession();
@@ -29,6 +31,7 @@ export default function UserPage() {
 
     const router = useRouter();
     const username = router.query.username;
+    const typedDispatch = useTypedDispatch();
 
     React.useEffect(() => {
         if (!username) return;
@@ -103,6 +106,16 @@ export default function UserPage() {
         getuserInfo(username);
     }, [session]);
 
+    const handleAddFollow = () => {
+        typedDispatch(addFollow(usernameLogin, username));
+        setIsFollow(!isFollow);
+    };
+
+    const handleUnfollow = () => {
+        typedDispatch(unFollow(usernameLogin, username));
+        setIsFollow(!isFollow);
+    };
+
     const loading = status === 'loading';
 
     if (loading) return <p>Loading...</p>;
@@ -124,6 +137,8 @@ export default function UserPage() {
                                     postCount={postCount}
                                     followerCount={followerCount}
                                     followCount={followCount}
+                                    handleAddFollow={handleAddFollow}
+                                    handleUnfollow={handleUnfollow}
                                 />
                                 <UserContent user={user} />
                             </>

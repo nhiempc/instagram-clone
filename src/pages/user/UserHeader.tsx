@@ -10,6 +10,8 @@ type UserHeaderProps = {
     postCount: number;
     followerCount: number;
     followCount: number;
+    handleAddFollow: () => void;
+    handleUnfollow: () => void;
 };
 
 const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
@@ -18,7 +20,9 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
     isFollow,
     postCount,
     followerCount,
-    followCount
+    followCount,
+    handleAddFollow,
+    handleUnfollow
 }) => {
     const [userPost, setUserPost] = React.useState<DocumentData>();
 
@@ -58,6 +62,7 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                             <button
                                 type='button'
                                 className={`${style.secondaryBtn}`}
+                                onClick={handleUnfollow}
                             >
                                 <div className='flex items-center gap-[6px] text-[14px]'>
                                     Bỏ theo dõi
@@ -68,6 +73,7 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                             <button
                                 type='button'
                                 className={`${style.primaryBtn}`}
+                                onClick={handleAddFollow}
                             >
                                 <div className='flex items-center gap-[6px]'>
                                     <AddFollowIcon

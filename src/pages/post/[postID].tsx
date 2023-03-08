@@ -2,7 +2,15 @@ import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import style from './[postID].module.css';
-import { doc, DocumentData, getDoc } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    DocumentData,
+    getDoc,
+    onSnapshot,
+    orderBy,
+    query
+} from 'firebase/firestore';
 import PostHeader from './PostHeader';
 import PostContent from './PostContent';
 import PostFooter from './PostFooter';
@@ -17,6 +25,11 @@ type PostModalProps = {
     postData: DocumentData;
 };
 
+type LikeData = {
+    isLike: boolean;
+    listUserLike: DocumentData[];
+};
+
 const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
     isOpen = false,
     handleClose,
@@ -24,8 +37,15 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
 }) => {
     const { data: session } = useSession();
     const [post, setPost] = React.useState<DocumentData>();
+    const [comments, setComments] = React.useState<DocumentData[]>([]);
+    const [postId, setPostId] = React.useState<string>('');
+    const [timestamp, setTimestamp] = React.useState<number>(0);
     const router = useRouter();
-    const postID = router.query.postID;
+
+    const [likeData, setLikedata] = React.useState<LikeData>({
+        isLike: false,
+        listUserLike: []
+    });
 
     React.useEffect(() => {
         const getPostInfo = async (postID: string | string[] | undefined) => {
@@ -35,8 +55,64 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
             const res = await getDoc(userRef);
             setPost(res.data());
         };
-        getPostInfo(postID);
+        getPostInfo(postId);
     }, [session]);
+
+    React.useEffect(() => {
+        if (!postData || postData.username === undefined) return;
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        const likeRef = doc(db, 'posts', postId, 'likes', postData.username);
+        const checkLike = async () => {
+            const docSnap = await getDoc(likeRef);
+            if (docSnap.exists()) {
+                setLikedata({ ...likeData, isLike: true });
+            } else {
+                setLikedata({ ...likeData, isLike: false });
+            }
+        };
+        checkLike();
+    }, [likeData.listUserLike.length, db, postId]);
+
+    React.useEffect(() => {
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        const unsubscribe = onSnapshot(
+            collection(db, 'posts', postId, 'likes'),
+            (snapshot) => {
+                setLikedata({ ...likeData, listUserLike: snapshot.docs });
+            }
+        );
+        return () => unsubscribe();
+    }, [db, likeData.isLike, postId]);
+
+    React.useEffect(() => {
+        const postID = router.query.postId;
+        if (!postID) return;
+        if (typeof postID === 'object') return;
+        setPostId(postID);
+    }, [router]);
+
+    React.useEffect(() => {
+        if (!postData) return;
+        if (!postData.timestamp) return;
+        setTimestamp(postData.timestamp.seconds);
+    }, [postData]);
+
+    React.useEffect(() => {
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        const unsubscribe = onSnapshot(
+            query(
+                collection(db, 'posts', postId, 'comments'),
+                orderBy('timestamp', 'desc')
+            ),
+            (snapshot) => {
+                setComments(snapshot.docs);
+            }
+        );
+        return () => unsubscribe();
+    }, [postId, db]);
 
     return (
         (postData || post) && (
@@ -119,11 +195,16 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
                                                             postData={postData}
                                                         />
                                                         <PostComment
-                                                            postData={postData}
+                                                            commentData={
+                                                                comments
+                                                            }
+                                                            postId={postId}
                                                         />
                                                     </div>
                                                     <PostFooter
-                                                        postData={postData}
+                                                        likeData={likeData}
+                                                        postId={postId}
+                                                        timestamp={timestamp}
                                                     />
                                                 </div>
                                             </div>

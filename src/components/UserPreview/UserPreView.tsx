@@ -2,13 +2,11 @@ import { AddFollowIcon, MessengerIcon } from '@/assets/icons';
 import { removeVietnameseTones } from '@/common';
 import {
     collection,
-    deleteDoc,
     doc,
     DocumentData,
     getDoc,
     onSnapshot,
     query,
-    setDoc,
     where
 } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
@@ -16,6 +14,9 @@ import { db } from '../../../firebase';
 import Link from 'next/link';
 import React from 'react';
 import style from './UserPreview.module.css';
+import { useTypedDispatch } from '@/redux/store';
+import { addFollow, unFollow } from '@/redux/slices/user.slice';
+import { useRouter } from 'next/router';
 
 type UserPreviewProps = {
     username: string;
@@ -35,6 +36,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         .split(' ')
         .join('')
         .toLowerCase();
+    const typedDispatch = useTypedDispatch();
 
     React.useEffect(() => {
         if (!username) return;
@@ -46,7 +48,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         };
 
         getuserInfo(username);
-    }, [db]);
+    }, [db, username]);
 
     React.useEffect(() => {
         if (!username) return;
@@ -57,7 +59,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
                 setPostCount(snapshot.docs.length);
             }
         );
-    }, [db]);
+    }, [db, username]);
 
     React.useEffect(() => {
         if (!username) return;
@@ -83,7 +85,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
                 setFollowerCount(snapshot.docs.length);
             }
         );
-    }, [db]);
+    }, [db, username]);
 
     React.useEffect(() => {
         if (!username) return;
@@ -91,22 +93,16 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
         onSnapshot(collection(db, 'users', username, 'follow'), (snapshot) => {
             setFollowCount(snapshot.docs.length);
         });
-    }, [db]);
+    }, [db, username]);
 
-    const handleAddFollow = async () => {
-        await setDoc(doc(db, 'users', usernamesession, 'follow', username), {
-            username: username
-        });
-        await setDoc(doc(db, 'users', username, 'follower', usernamesession), {
-            username: usernamesession
-        });
+    const handleAddFollow = () => {
+        typedDispatch(addFollow(usernamesession, username));
+        setIsFollow(!isFollow);
     };
 
-    const handleUnfollow = async () => {
-        await deleteDoc(doc(db, 'users', usernamesession, 'follow', username));
-        await deleteDoc(
-            doc(db, 'users', username, 'follower', usernamesession)
-        );
+    const handleUnfollow = () => {
+        typedDispatch(unFollow(usernamesession, username));
+        setIsFollow(!isFollow);
     };
 
     return (
