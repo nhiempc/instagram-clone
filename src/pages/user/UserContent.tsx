@@ -11,8 +11,8 @@ import {
     where
 } from 'firebase/firestore';
 import { db } from '../../../firebase';
-import { createBrowserHistory } from 'history';
 import PostDetailModal from '../post/[postID]';
+import { useRouter } from 'next/router';
 
 type UserContentProps = {
     user: DocumentData;
@@ -26,11 +26,12 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
     const [isOpenPostDetailModal, setIsOpenPostDetailModal] =
         React.useState<boolean>(false);
 
+    const router = useRouter();
+    // const postID = router.query.postID;
+
     function classNames(...classes: any) {
         return classes.filter(Boolean).join(' ');
     }
-
-    const history = createBrowserHistory();
 
     React.useEffect(
         () =>
@@ -47,12 +48,17 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
     );
 
     const handleClosePostDetailModal = () => {
-        history.back();
+        router.push(`/user/${user.username}`);
         setIsOpenPostDetailModal(!isOpenPostDetailModal);
     };
 
     const handleClickPost = async (postID: string) => {
-        history.push(`/post/${postID}`);
+        if (!postID) return;
+        if (typeof postID === 'object') return;
+
+        router.push(`/user?post=${postID}`, undefined, {
+            shallow: true
+        });
         setIsOpenPostDetailModal(!isOpenPostDetailModal);
         const postRef = doc(db, 'posts', postID);
         const docSnap = await getDoc(postRef);

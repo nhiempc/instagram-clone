@@ -20,6 +20,13 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
     followerCount,
     followCount
 }) => {
+    const [userPost, setUserPost] = React.useState<DocumentData>();
+
+    React.useEffect(() => {
+        if (!user) return;
+        setUserPost(user);
+    }, [user]);
+
     return (
         <>
             <div className={`${style.headerWrapper} mb-11 flex w-full pt-8`}>
@@ -27,8 +34,8 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                     className={`${style.userAvatar} flex justify-center items-center w-1/3`}
                 >
                     <img
-                        src={user.profileImg}
-                        alt={user.name}
+                        src={userPost?.profileImg}
+                        alt={userPost?.name}
                         className='rounded-full md:w-[150px] lg:w-[150px] sm:w-[77px]'
                     />
                 </div>
@@ -37,9 +44,9 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                         className={`${style.header} flex items-center gap-5 mb-5`}
                     >
                         <div className={`${style.userName} text-[20px]`}>
-                            {user.username}
+                            {userPost?.username}
                         </div>
-                        {user.username === usernameLogin && (
+                        {userPost?.username === usernameLogin && (
                             <button
                                 type='button'
                                 className={`${style.secondaryBtn}`}
@@ -47,7 +54,7 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                                 Chỉnh sửa trang cá nhân
                             </button>
                         )}
-                        {user.username !== usernameLogin && isFollow && (
+                        {userPost?.username !== usernameLogin && isFollow && (
                             <button
                                 type='button'
                                 className={`${style.secondaryBtn}`}
@@ -57,7 +64,7 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                                 </div>
                             </button>
                         )}
-                        {user.username !== usernameLogin && !isFollow && (
+                        {userPost?.username !== usernameLogin && !isFollow && (
                             <button
                                 type='button'
                                 className={`${style.primaryBtn}`}
@@ -108,7 +115,7 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                         </div>
                     </div>
                     <div className={`${style.footer} font-medium`}>
-                        {user.name}
+                        {userPost?.name}
                     </div>
                 </div>
             </div>

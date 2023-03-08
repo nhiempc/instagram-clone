@@ -14,19 +14,25 @@ import { useTypedDispatch } from '@/redux/store';
 import { deletePost } from '@/redux/slices/post.slice';
 
 type PostHeaderProps = {
-    postData: DocumentData;
+    postData: DocumentData | undefined;
 };
 
-const PostHeader: React.FunctionComponent<PostHeaderProps> = ({ postData }) => {
+const PostHeader: React.FunctionComponent<any> = ({ postData }) => {
     const { data: session } = useSession();
     const [isOpenPersonalModal, setIsOpenPersonalModal] = React.useState(false);
+    const [usernameLogin, setUsernameLogin] = React.useState<string>('');
     const [isOpenPublicModal, setIsOpenPublicModal] = React.useState(false);
     const [isOpenEditPostModal, setIsOpenEditPostModal] = React.useState(false);
 
-    const username = removeVietnameseTones(session?.user?.name as string)
-        .split(' ')
-        .join('')
-        .toLowerCase();
+    React.useEffect(() => {
+        if (!session) return;
+        const username = removeVietnameseTones(session?.user?.name as string)
+            .split(' ')
+            .join('')
+            .toLowerCase();
+        setUsernameLogin(username);
+    }, [session]);
+
     const renderPreview = (props: any) => {
         return (
             <div tabIndex='-1' {...props}>
@@ -38,7 +44,7 @@ const PostHeader: React.FunctionComponent<PostHeaderProps> = ({ postData }) => {
     };
 
     const handleViewMoreBtnClick = () => {
-        postData.username === username
+        postData.username === usernameLogin
             ? setIsOpenPersonalModal(!isOpenPersonalModal)
             : setIsOpenPublicModal(!isOpenPublicModal);
     };
@@ -70,63 +76,65 @@ const PostHeader: React.FunctionComponent<PostHeaderProps> = ({ postData }) => {
         setIsOpenPublicModal(!isOpenPublicModal);
     };
     return (
-        <div
-            className={`${style.post_header} flex items-center justify-between px-4`}
-        >
-            <div>
-                <Tippy
-                    interactive
-                    delay={[800, 0]}
-                    offset={[-50, 0]}
-                    placement='bottom'
-                    render={renderPreview}
-                >
-                    <div className={`${style.post_header_left} my-3 mx-1`}>
-                        <div className={`${style.user} flex items-center`}>
-                            <Link
-                                href={{
-                                    pathname: `user/${postData.username}`,
-                                    query: {
-                                        username: postData.username
-                                    }
-                                }}
-                            >
-                                <img
-                                    src={postData.profileImg}
-                                    alt={postData.username}
-                                    className='rounded-full w-[32px] h-[32px]'
-                                />
-                            </Link>
-                            <div className={`${style.username}`}>
-                                <Link href={`user/${postData.username}`}>
-                                    {postData.username}
+        postData && (
+            <div
+                className={`${style.post_header} flex items-center justify-between px-4`}
+            >
+                <div>
+                    <Tippy
+                        interactive
+                        delay={[800, 0]}
+                        offset={[-50, 0]}
+                        placement='bottom'
+                        render={renderPreview}
+                    >
+                        <div className={`${style.post_header_left} my-3 mx-1`}>
+                            <div className={`${style.user} flex items-center`}>
+                                <Link
+                                    href={{
+                                        pathname: `user/${postData.username}`,
+                                        query: {
+                                            username: postData.username
+                                        }
+                                    }}
+                                >
+                                    <img
+                                        src={postData.profileImg}
+                                        alt={postData.username}
+                                        className='rounded-full w-[32px] h-[32px]'
+                                    />
                                 </Link>
+                                <div className={`${style.username}`}>
+                                    <Link href={`user/${postData.username}`}>
+                                        {postData.username}
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Tippy>
+                    </Tippy>
+                </div>
+                <div className={`${style.post_header_right}`}>
+                    <button type='button' onClick={handleViewMoreBtnClick}>
+                        <MoreOptionIcon />
+                        {postData.username === usernameLogin ? (
+                            <PersonalModal
+                                isOpen={isOpenPersonalModal}
+                                handleCancel={handleClosePersonalModal}
+                                handleDelete={handleDeletePost}
+                                handleEdit={handleEditPost}
+                                handleHideLike={handleHideLike}
+                                handleHideComment={handleHideComment}
+                            />
+                        ) : (
+                            <PublicModal
+                                isOpen={isOpenPublicModal}
+                                handleCancel={handleClosePublicModal}
+                            />
+                        )}
+                    </button>
+                </div>
             </div>
-            <div className={`${style.post_header_right}`}>
-                <button type='button' onClick={handleViewMoreBtnClick}>
-                    <MoreOptionIcon />
-                    {postData.username === username ? (
-                        <PersonalModal
-                            isOpen={isOpenPersonalModal}
-                            handleCancel={handleClosePersonalModal}
-                            handleDelete={handleDeletePost}
-                            handleEdit={handleEditPost}
-                            handleHideLike={handleHideLike}
-                            handleHideComment={handleHideComment}
-                        />
-                    ) : (
-                        <PublicModal
-                            isOpen={isOpenPublicModal}
-                            handleCancel={handleClosePublicModal}
-                        />
-                    )}
-                </button>
-            </div>
-        </div>
+        )
     );
 };
 
