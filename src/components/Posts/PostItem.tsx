@@ -224,7 +224,9 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
 
     return (
         <div className={`${style.post_item} flex flex-col`}>
-            <div className={`${style.post_header} flex items-center`}>
+            <div
+                className={`${style.post_header} flex items-center justify-between`}
+            >
                 <div>
                     <Tippy
                         interactive
