@@ -15,24 +15,25 @@ import { useTypedDispatch } from '@/redux/store';
 import {
     addCommentToPost,
     likePost,
-    unLikePost
+    unLikePost,
+    savePost,
+    unSavePost
 } from '@/redux/slices/post.slice';
 import Picker, { EmojiStyle } from 'emoji-picker-react';
 
-type LikeData = {
-    isLike: boolean;
-    listUserLike: DocumentData[];
-};
-
 type PostFooterProps = {
-    likeData: LikeData;
     postId: string;
+    isLike: boolean;
+    isSave: boolean;
+    listUserLike: DocumentData[];
     timestamp: number;
 };
 
 const PostFooter: React.FunctionComponent<PostFooterProps> = ({
-    likeData,
     postId,
+    isLike,
+    isSave,
+    listUserLike,
     timestamp
 }) => {
     const [comment, setComment] = React.useState<string>('');
@@ -75,10 +76,18 @@ const PostFooter: React.FunctionComponent<PostFooterProps> = ({
     };
 
     const handleClickLike = async () => {
-        if (likeData.isLike) {
+        if (isLike) {
             typedDispatch(unLikePost(postId, usernameLogin));
         } else {
             typedDispatch(likePost(postId, usernameLogin));
+        }
+    };
+
+    const handleClickSave = async () => {
+        if (isSave) {
+            typedDispatch(unSavePost(postId, usernameLogin));
+        } else {
+            typedDispatch(savePost(postId, usernameLogin));
         }
     };
 
@@ -87,6 +96,7 @@ const PostFooter: React.FunctionComponent<PostFooterProps> = ({
             inputRef?.current.focus();
         }
     };
+
     return (
         <>
             <div className={`${style.footerWrapper} flex flex-col pt-4 pb-2`}>
@@ -98,11 +108,7 @@ const PostFooter: React.FunctionComponent<PostFooterProps> = ({
                             className={`${style.btn_like} ${style.btn}`}
                             onClick={handleClickLike}
                         >
-                            {likeData && likeData.isLike ? (
-                                <LikedIcon />
-                            ) : (
-                                <LikeActiveIcon />
-                            )}
+                            {isLike ? <LikedIcon /> : <LikeActiveIcon />}
                         </button>
                         <button
                             className={`${style.btn_comment} ${style.btn}`}
@@ -115,16 +121,26 @@ const PostFooter: React.FunctionComponent<PostFooterProps> = ({
                         </button>
                     </div>
                     <div className={`${style.interact_right}`}>
-                        <button className={`${style.btn_save} ${style.btn}`}>
-                            <SaveActiveIcon />
+                        <button
+                            className={`${style.btn_save} ${style.btn}`}
+                            onClick={handleClickSave}
+                        >
+                            {isSave ? (
+                                <SaveActiveIcon polygonFill='black' />
+                            ) : (
+                                <SaveActiveIcon />
+                            )}
                         </button>
                     </div>
                 </div>
-                {likeData && likeData.listUserLike.length === 0 ? (
+                {listUserLike && listUserLike.length === 0 ? (
                     <div className='likeCount py-2 px-4'>
                         <p className='text-[14px]'>
                             Hãy là người đầu tiên{' '}
-                            <span className='font-semibold cursor-pointer'>
+                            <span
+                                onClick={handleClickLike}
+                                className='font-semibold cursor-pointer'
+                            >
                                 thích bài viết này
                             </span>
                         </p>
@@ -133,8 +149,7 @@ const PostFooter: React.FunctionComponent<PostFooterProps> = ({
                     <div className='likeCount py-2 px-4'>
                         <p className='text-[14px]'>
                             <span className='font-semibold cursor-pointer'>
-                                {likeData && likeData.listUserLike.length} lượt
-                                thích
+                                {listUserLike && listUserLike.length} lượt thích
                             </span>
                         </p>
                     </div>

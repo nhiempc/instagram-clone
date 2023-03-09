@@ -18,6 +18,7 @@ import { db } from '../../../firebase';
 import UserContent from './UserContent';
 import { useTypedDispatch } from '@/redux/store';
 import { addFollow, unFollow } from '@/redux/slices/user.slice';
+import { async } from '@firebase/util';
 
 export default function UserPage() {
     const { data: session, status } = useSession();
@@ -28,6 +29,9 @@ export default function UserPage() {
     const [postCount, setPostCount] = React.useState<number>(0);
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followCount, setFollowCount] = React.useState<number>(0);
+    const [savedPost, setSavedPost] = React.useState<
+        (DocumentData | undefined)[]
+    >([]);
 
     const router = useRouter();
     const username = router.query.username;
@@ -51,6 +55,33 @@ export default function UserPage() {
         };
         checkFollow();
     }, [db, session, usernameLogin]);
+
+    React.useEffect(() => {
+        if (!username) return;
+        if (typeof username === 'object') return;
+        if (!usernameLogin) return;
+        if (!session) return;
+
+        const unsub = onSnapshot(
+            collection(db, 'users', username, 'save'),
+            (snapshot) => {
+                const result = snapshot.docs.map(async (d) => {
+                    const postId = d.data().postId;
+                    const postRef = doc(db, 'posts', postId);
+                    const res = await getDoc(postRef);
+                    return res;
+                });
+                Promise.all(result).then((value) => {
+                    if (username === usernameLogin) {
+                        setSavedPost(value);
+                    } else {
+                        setSavedPost([]);
+                    }
+                });
+            }
+        );
+        return () => unsub();
+    }, [usernameLogin, username, db]);
 
     React.useEffect(() => {
         if (!username) return;
@@ -140,7 +171,10 @@ export default function UserPage() {
                                     handleAddFollow={handleAddFollow}
                                     handleUnfollow={handleUnfollow}
                                 />
-                                <UserContent user={user} />
+                                <UserContent
+                                    user={user}
+                                    savedPost={savedPost}
+                                />
                             </>
                         )}
                     </div>

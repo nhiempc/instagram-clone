@@ -1,7 +1,7 @@
 import { IPost } from '@/models/IPost';
 import { createSlice } from '@reduxjs/toolkit';
 import { db, storage } from '../../../firebase';
-import { addDoc, collection, deleteDoc, doc, DocumentData, getDocs, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, DocumentData, getDoc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 
 const posts : IPost[] = [];
@@ -62,11 +62,21 @@ export const deletePost = (id: any) => async () => {
     await deleteDoc(doc(db, 'posts', id));
 }
 
-export const likePost = (id: any, username: any) => async () => {
-    await setDoc(doc(db, 'posts', id, 'likes', username), {
+export const likePost = (postId: string, username: string) => async () => {
+    await setDoc(doc(db, 'posts', postId, 'likes', username), {
         username: username
     });
 }
-export const unLikePost = (id: any, username: any) => async () => {
-    await deleteDoc(doc(db, 'posts', id, 'likes', username));
+export const unLikePost = (postId: string, username: string) => async () => {
+    await deleteDoc(doc(db, 'posts', postId, 'likes', username));
+}
+
+export const savePost = (postId: string, username: string) => async () => {
+    await setDoc(doc(db, 'users', username, 'save', postId), {
+        postId: postId
+    });
+}
+
+export const unSavePost = (postId: string, username: string) => async () => {
+    await deleteDoc(doc(db, 'users', username, 'save', postId));
 }

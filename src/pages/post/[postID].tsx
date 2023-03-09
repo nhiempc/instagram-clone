@@ -18,6 +18,7 @@ import PostComment from './PostComment';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { db } from '../../../firebase';
+import { removeVietnameseTones } from '@/common';
 
 type PostModalProps = {
     isOpen: boolean;
@@ -25,27 +26,103 @@ type PostModalProps = {
     postData: DocumentData;
 };
 
-type LikeData = {
-    isLike: boolean;
-    listUserLike: DocumentData[];
-};
-
 const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
-    isOpen = false,
+    isOpen,
     handleClose,
     postData
 }) => {
     const { data: session } = useSession();
+    const [usernameLogin, setUsernameLogin] = React.useState<string>('');
     const [post, setPost] = React.useState<DocumentData>();
     const [comments, setComments] = React.useState<DocumentData[]>([]);
     const [postId, setPostId] = React.useState<string>('');
     const [timestamp, setTimestamp] = React.useState<number>(0);
+    const [isLike, setIsLike] = React.useState<boolean>(false);
+    const [isSave, setIsSave] = React.useState<boolean>(false);
+    const [saveCount, setSaveCount] = React.useState<number>(0);
+    const [listUserLike, setListUserLike] = React.useState<DocumentData[]>([]);
     const router = useRouter();
 
-    const [likeData, setLikedata] = React.useState<LikeData>({
-        isLike: false,
-        listUserLike: []
-    });
+    React.useEffect(() => {
+        if (session) {
+            const usernameSession = removeVietnameseTones(
+                session?.user?.name as string
+            )
+                .split(' ')
+                .join('')
+                .toLowerCase();
+            setUsernameLogin(usernameSession);
+        }
+    }, [session]);
+
+    React.useEffect(() => {
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        if (!usernameLogin) return;
+        if (typeof usernameLogin === 'object') return;
+        const unsubscribe = onSnapshot(
+            collection(db, 'users', usernameLogin, 'save'),
+            (snapshot) => {
+                setSaveCount(snapshot.docs.length);
+            }
+        );
+        return () => unsubscribe();
+    }, [db, postId, usernameLogin]);
+
+    React.useEffect(() => {
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        const unsubscribe = onSnapshot(
+            collection(db, 'posts', postId, 'likes'),
+            (snapshot) => {
+                setListUserLike(snapshot.docs);
+            }
+        );
+        return () => unsubscribe();
+    }, [db, postId]);
+
+    React.useEffect(() => {
+        if (!postData || postData.username === undefined) return;
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        if (postData.username) {
+            const likeRef = doc(
+                db,
+                'posts',
+                postId,
+                'likes',
+                postData.username
+            );
+            const checkLike = async () => {
+                await getDoc(likeRef).then((doc) => {
+                    if (doc.exists()) {
+                        setIsLike(true);
+                    } else {
+                        setIsLike(false);
+                    }
+                });
+            };
+            checkLike();
+        }
+    }, [db, postId, listUserLike.length]);
+
+    React.useEffect(() => {
+        if (!postId) return;
+        if (typeof postId === 'object') return;
+        if (!usernameLogin) return;
+        if (typeof usernameLogin === 'object') return;
+        const saveRef = doc(db, 'users', usernameLogin, 'save', postId);
+        const checkSave = async () => {
+            await getDoc(saveRef).then((doc) => {
+                if (doc.exists()) {
+                    setIsSave(true);
+                } else {
+                    setIsSave(false);
+                }
+            });
+        };
+        checkSave();
+    }, [db, postId, usernameLogin, saveCount]);
 
     React.useEffect(() => {
         const getPostInfo = async (postID: string | string[] | undefined) => {
@@ -57,34 +134,6 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
         };
         getPostInfo(postId);
     }, [session]);
-
-    React.useEffect(() => {
-        if (!postData || postData.username === undefined) return;
-        if (!postId) return;
-        if (typeof postId === 'object') return;
-        const likeRef = doc(db, 'posts', postId, 'likes', postData.username);
-        const checkLike = async () => {
-            const docSnap = await getDoc(likeRef);
-            if (docSnap.exists()) {
-                setLikedata({ ...likeData, isLike: true });
-            } else {
-                setLikedata({ ...likeData, isLike: false });
-            }
-        };
-        checkLike();
-    }, [likeData.listUserLike.length, db, postId]);
-
-    React.useEffect(() => {
-        if (!postId) return;
-        if (typeof postId === 'object') return;
-        const unsubscribe = onSnapshot(
-            collection(db, 'posts', postId, 'likes'),
-            (snapshot) => {
-                setLikedata({ ...likeData, listUserLike: snapshot.docs });
-            }
-        );
-        return () => unsubscribe();
-    }, [db, likeData.isLike, postId]);
 
     React.useEffect(() => {
         const postID = router.query.postId;
@@ -202,8 +251,12 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
                                                         />
                                                     </div>
                                                     <PostFooter
-                                                        likeData={likeData}
                                                         postId={postId}
+                                                        isLike={isLike}
+                                                        isSave={isSave}
+                                                        listUserLike={
+                                                            listUserLike
+                                                        }
                                                         timestamp={timestamp}
                                                     />
                                                 </div>

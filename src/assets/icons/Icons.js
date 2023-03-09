@@ -535,19 +535,25 @@ export const ShareIcon = ({ width = '24', height = '24' }) => (
         ></polygon>
     </svg>
 );
-export const SaveActiveIcon = ({ width = '24', height = '24' }) => (
+export const SaveActiveIcon = ({
+    width = '24',
+    height = '24',
+    color = 'rgb(38, 38, 38)',
+    fill = 'rgb(38, 38, 38)',
+    polygonFill = 'none'
+}) => (
     <svg
         aria-label='Lưu'
         className='_ab6-'
-        color='rgb(38, 38, 38)'
-        fill='rgb(38, 38, 38)'
-        height='24'
+        color={color}
+        fill={fill}
+        height={height}
         role='img'
         viewBox='0 0 24 24'
-        width='24'
+        width={width}
     >
         <polygon
-            fill='none'
+            fill={polygonFill}
             points='20 21 12 13.44 4 21 4 3 20 3 20 21'
             stroke='currentColor'
             strokeLinecap='round'

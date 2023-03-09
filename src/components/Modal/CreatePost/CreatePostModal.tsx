@@ -73,6 +73,8 @@ const CreatePostModal: React.FunctionComponent<CreatePostModalProps> = ({
             username: username,
             caption: captionRef.current.value,
             profileImg: session?.user?.image,
+            showComment: true,
+            showLike: true,
             timestamp: serverTimestamp()
         });
 

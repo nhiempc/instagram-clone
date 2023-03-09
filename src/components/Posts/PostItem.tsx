@@ -34,7 +34,9 @@ import {
     addCommentToPost,
     deletePost,
     likePost,
-    unLikePost
+    savePost,
+    unLikePost,
+    unSavePost
 } from '@/redux/slices/post.slice';
 import EditPostModal from '../Modal/EditPost/EditPostModal';
 import Popper from '../Popper';
@@ -49,12 +51,14 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     const [comment, setComment] = useState<string>('');
     const [comments, setComments] = useState<DocumentData[] | undefined>();
     const [likeCount, setLikeCount] = useState<number>(0);
+    const [saveCount, setSaveCount] = useState<number>(0);
     const [isOpenLikeCountModal, setIsOpenLikeCountModal] =
         React.useState(false);
     const [isOpenEditPostModal, setIsOpenEditPostModal] = React.useState(false);
     const [isOpenPersonalModal, setIsOpenPersonalModal] = React.useState(false);
     const [isOpenPublicModal, setIsOpenPublicModal] = React.useState(false);
-    const [hasLike, setHasLike] = useState<boolean>();
+    const [hasLike, setHasLike] = useState<boolean>(false);
+    const [hasSave, setHasSave] = useState<boolean>(false);
     const [showLike, setShowLike] = useState<boolean>(post.data().showLike);
     const [showComment, setShowComment] = useState<boolean>(
         post.data().showComment
@@ -185,6 +189,17 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
         [db, post.id]
     );
 
+    React.useEffect(
+        () =>
+            onSnapshot(
+                collection(db, 'users', username, 'save'),
+                (snapshot) => {
+                    setSaveCount(snapshot.docs.length);
+                }
+            ),
+        [db, post.id]
+    );
+
     React.useEffect(() => {
         const likeRef = doc(db, 'posts', post.id, 'likes', username);
         const checkLike = async () => {
@@ -203,6 +218,27 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
             typedDispatch(unLikePost(post.id, username));
         } else {
             typedDispatch(likePost(post.id, username));
+        }
+    };
+
+    React.useEffect(() => {
+        const saveRef = doc(db, 'users', username, 'save', post.id);
+        const checkSave = async () => {
+            const docSnap = await getDoc(saveRef);
+            if (docSnap.exists()) {
+                setHasSave(true);
+            } else {
+                setHasSave(false);
+            }
+        };
+        checkSave();
+    }, [db, saveCount]);
+
+    const handleClickSave = async () => {
+        if (hasSave) {
+            typedDispatch(unSavePost(post.id, username));
+        } else {
+            typedDispatch(savePost(post.id, username));
         }
     };
 
@@ -310,8 +346,15 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
                         </button>
                     </div>
                     <div className={`${style.interact_right}`}>
-                        <button className={`${style.btn_save} ${style.btn}`}>
-                            <SaveActiveIcon />
+                        <button
+                            className={`${style.btn_save} ${style.btn}`}
+                            onClick={handleClickSave}
+                        >
+                            {hasSave ? (
+                                <SaveActiveIcon polygonFill='black' />
+                            ) : (
+                                <SaveActiveIcon />
+                            )}
                         </button>
                     </div>
                 </div>

@@ -16,9 +16,13 @@ import { useRouter } from 'next/router';
 
 type UserContentProps = {
     user: DocumentData;
+    savedPost: (DocumentData | undefined)[];
 };
 
-const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
+const UserContent: React.FunctionComponent<UserContentProps> = ({
+    user,
+    savedPost
+}) => {
     const [postByUser, setPostByUser] = React.useState<
         DocumentData[] | undefined
     >();
@@ -71,7 +75,7 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
 
     let tabs = {
         'Bài viết': postByUser,
-        'Đã lưu': [],
+        'Đã lưu': savedPost,
         'Được gắn thẻ': []
     };
 
@@ -100,19 +104,19 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({ user }) => {
                         <Tab.Panels className='mt-2'>
                             {Object.values(tabs).map((tab, idx) => (
                                 <Tab.Panel key={idx} className={'a'}>
-                                    <div className='flex'>
+                                    <div className={`flex flex-wrap`}>
                                         {tab?.map((post, key) => (
                                             <div
                                                 key={key}
                                                 onClick={() =>
-                                                    handleClickPost(post.id)
+                                                    handleClickPost(post?.id)
                                                 }
                                                 className='lg:w-1/3 md:w-1/3 sm:w-full cursor-pointer'
                                             >
                                                 <img
                                                     className='p-3'
-                                                    src={post.data().image}
-                                                    alt={post.data().username}
+                                                    src={post?.data().image}
+                                                    alt={post?.data().username}
                                                 />
                                             </div>
                                         ))}
