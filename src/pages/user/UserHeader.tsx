@@ -2,6 +2,7 @@ import React from 'react';
 import { DocumentData } from 'firebase/firestore';
 import style from './[username].module.css';
 import { AddFollowIcon } from '@/assets/icons';
+import Link from 'next/link';
 
 type UserHeaderProps = {
     user: DocumentData;
@@ -59,15 +60,28 @@ const UserHeader: React.FunctionComponent<UserHeaderProps> = ({
                             </button>
                         )}
                         {userPost?.username !== usernameLogin && isFollow && (
-                            <button
-                                type='button'
-                                className={`${style.secondaryBtn}`}
-                                onClick={handleUnfollow}
-                            >
-                                <div className='flex items-center gap-[6px] text-[14px]'>
-                                    Bỏ theo dõi
-                                </div>
-                            </button>
+                            <>
+                                <button
+                                    type='button'
+                                    className={`${style.secondaryBtn}`}
+                                    onClick={handleUnfollow}
+                                >
+                                    <div className='flex items-center gap-[6px] text-[14px]'>
+                                        Bỏ theo dõi
+                                    </div>
+                                </button>
+                                <button
+                                    type='button'
+                                    className={`${style.secondaryBtn}`}
+                                >
+                                    <Link
+                                        href={`/message/${userPost?.username}`}
+                                        className='flex items-center gap-[6px] text-[14px]'
+                                    >
+                                        Nhắn tin
+                                    </Link>
+                                </button>
+                            </>
                         )}
                         {userPost?.username !== usernameLogin && !isFollow && (
                             <button

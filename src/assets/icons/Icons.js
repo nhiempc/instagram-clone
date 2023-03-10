@@ -1051,3 +1051,86 @@ export const InfoIcon = ({
         ></polyline>
     </svg>
 );
+
+export const SendImageIcon = ({
+    width = '24',
+    height = '24',
+    fill = 'rgb(38, 38, 38)',
+    color = 'rgb(38, 38, 38)'
+}) => (
+    <svg
+        aria-label='Thêm ảnh hoặc video'
+        className='_ab6-'
+        color={color}
+        fill={fill}
+        height={height}
+        role='img'
+        viewBox='0 0 24 24'
+        width={width}
+    >
+        <path
+            d='M6.549 5.013A1.557 1.557 0 1 0 8.106 6.57a1.557 1.557 0 0 0-1.557-1.557Z'
+            fillRule='evenodd'
+        ></path>
+        <path
+            d='m2 18.605 3.901-3.9a.908.908 0 0 1 1.284 0l2.807 2.806a.908.908 0 0 0 1.283 0l5.534-5.534a.908.908 0 0 1 1.283 0l3.905 3.905'
+            fill='none'
+            stroke='currentColor'
+            strokeLinejoin='round'
+            strokeWidth='2'
+        ></path>
+        <path
+            d='M18.44 2.004A3.56 3.56 0 0 1 22 5.564h0v12.873a3.56 3.56 0 0 1-3.56 3.56H5.568a3.56 3.56 0 0 1-3.56-3.56V5.563a3.56 3.56 0 0 1 3.56-3.56Z'
+            fill='none'
+            stroke='currentColor'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2'
+        ></path>
+    </svg>
+);
+export const PaperPlaneRoundedIcon = ({
+    width = '24',
+    height = '24',
+    fill = 'rgb(38, 38, 38)',
+    color = 'rgb(38, 38, 38)'
+}) => (
+    <svg
+        aria-label='Direct'
+        className='_ab6-'
+        color={color}
+        fill={fill}
+        height={height}
+        role='img'
+        viewBox='0 0 96 96'
+        width={width}
+    >
+        <circle
+            cx='48'
+            cy='48'
+            fill='none'
+            r='47'
+            stroke='currentColor'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2'
+        ></circle>
+        <line
+            fill='none'
+            stroke='currentColor'
+            strokeLinejoin='round'
+            strokeWidth='2'
+            x1='69.286'
+            x2='41.447'
+            y1='33.21'
+            y2='48.804'
+        ></line>
+        <polygon
+            fill='none'
+            points='47.254 73.123 71.376 31.998 24.546 32.002 41.448 48.805 47.254 73.123'
+            stroke='currentColor'
+            strokeLinejoin='round'
+            strokeWidth='2'
+        ></polygon>
+    </svg>
+);

@@ -1,9 +1,49 @@
 import { NewMessageIcon } from '@/assets/icons';
+import { db } from '../../../firebase';
+import {
+    collection,
+    doc,
+    DocumentData,
+    getDoc,
+    onSnapshot
+} from 'firebase/firestore';
 import React from 'react';
 import style from './Message.module.css';
 import MessageUserItem from './MessageUserItem';
 
-const MessageUser = () => {
+type MessageUserProps = {
+    user: any;
+};
+
+const MessageUser: React.FunctionComponent<MessageUserProps> = ({ user }) => {
+    const [listChat, setListChat] = React.useState<DocumentData[]>();
+    const [userLogin, setUserLogin] = React.useState<string>('');
+
+    React.useEffect(() => {
+        if (!user) return;
+        if (!user.username) return;
+        setUserLogin(user.username);
+    }, [user]);
+
+    React.useEffect(() => {
+        if (!user.username) return;
+        const getUserListChat = (username: string) => {
+            onSnapshot(
+                collection(db, 'users', username, 'messages'),
+                (snapshot) => {
+                    const result = snapshot.docs.map(async (snap) => {
+                        const username = snap.data().username;
+                        const userRef = doc(db, 'users', username);
+                        const res = await getDoc(userRef);
+                        return res;
+                    });
+                    Promise.all(result).then((value) => setListChat(value));
+                }
+            );
+        };
+        getUserListChat(user.username);
+    }, [user, db]);
+
     return (
         <div className={`${style.listUserWrapper} lg:w-[30%]`}>
             <div
@@ -15,7 +55,7 @@ const MessageUser = () => {
                     <div
                         className={`${style.headerUsername} font-semibold text-[16px]`}
                     >
-                        once.died.no.return
+                        {userLogin}
                     </div>
                     <button type='button'>
                         <NewMessageIcon />
@@ -23,9 +63,9 @@ const MessageUser = () => {
                 </div>
             </div>
             <div className={`${style.userWrapper}`}>
-                <MessageUserItem />
-                <MessageUserItem />
-                <MessageUserItem />
+                {listChat?.map((item, index) => (
+                    <MessageUserItem key={index} userChatItem={item} />
+                ))}
             </div>
         </div>
     );

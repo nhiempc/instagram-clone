@@ -164,7 +164,7 @@ const UserPreview: React.FunctionComponent<UserPreviewProps> = ({
                             type='button'
                             className={`${style.mesageBtn} text-white justify-center flex`}
                         >
-                            <Link href={'/message'}>
+                            <Link href={`/message/${username}`}>
                                 <div className='flex items-center gap-[6px]'>
                                     <MessengerIcon
                                         width='16'

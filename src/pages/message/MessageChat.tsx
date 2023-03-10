@@ -3,6 +3,8 @@ import {
     EmojiIcon,
     InfoIcon,
     LikeActiveIcon,
+    PaperPlaneRoundedIcon,
+    SendImageIcon,
     VideoCallIcon
 } from '@/assets/icons';
 import Link from 'next/link';
@@ -10,59 +12,91 @@ import React from 'react';
 import style from './Message.module.css';
 import MessageChatItem from './MessageChatItem';
 import Picker, { EmojiStyle } from 'emoji-picker-react';
+import { useRouter } from 'next/router';
+import {
+    addDoc,
+    collection,
+    doc,
+    DocumentData,
+    serverTimestamp,
+    setDoc
+} from 'firebase/firestore';
+import { db } from '../../../firebase';
 
-const chatContent = [
-    {
-        content: 'Đây là nội dung chat 1',
-        float: 'justify-start'
-    },
-    {
-        content: 'Đây là nội dung chat 2',
-        float: 'justify-end'
-    },
-    {
-        content: 'Đây là nội dung chat 3',
-        float: 'justify-start'
-    },
-    {
-        content: 'Đây là nội dung chat 4',
-        float: 'justify-start'
-    },
-    {
-        content: 'Đây là nội dung chat 5',
-        float: 'justify-end'
-    },
-    {
-        content: 'Đây là nội dung chat 6',
-        float: 'justify-end'
-    },
-    {
-        content: 'Đây là nội dung chat 7',
-        float: 'justify-end'
-    },
-    {
-        content: 'Đây là nội dung chat 8',
-        float: 'justify-start'
-    },
-    {
-        content: 'Đây là nội dung chat 9',
-        float: 'justify-end'
-    },
-    {
-        content: 'Đây là nội dung chat 10',
-        float: 'justify-end'
-    }
-];
+type MessageChatProps = {
+    user: any;
+    receiver: DocumentData | undefined;
+    conversation: DocumentData[];
+};
 
-const MessageChat = () => {
+const MessageChat: React.FunctionComponent<MessageChatProps> = ({
+    user,
+    receiver,
+    conversation
+}) => {
     const [message, setMessage] = React.useState<string>('');
     const [showPicker, setShowPicker] = React.useState(false);
+
+    const router = useRouter();
 
     const onEmojiClick = (emojiObject: any) => {
         setMessage((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
-    return (
+
+    const handleSendMessage = async (e: any) => {
+        e.preventDefault();
+        if (!receiver) return;
+        if (!user.username) return;
+        const messageToSend = message;
+        setMessage('');
+        const data = {
+            sender: user.username,
+            senderImg: user.image,
+            senderName: user.name,
+            receiver: receiver.username,
+            receiverImg: receiver.profileImg,
+            receiverName: receiver.name,
+            content: messageToSend,
+            timestamp: serverTimestamp()
+        };
+        await addDoc(
+            collection(
+                db,
+                'users',
+                user.username,
+                'messages',
+                receiver.username,
+                'conversation'
+            ),
+            data
+        );
+        await setDoc(
+            doc(db, 'users', user.username, 'messages', receiver.username),
+            {
+                username: receiver.username
+            }
+        );
+        await addDoc(
+            collection(
+                db,
+                'users',
+                receiver.username,
+                'messages',
+                user.username,
+                'conversation'
+            ),
+            data
+        );
+        await setDoc(
+            doc(db, 'users', receiver.username, 'messages', user.username),
+            {
+                username: user.username
+            }
+        );
+    };
+
+    return router.query.sender ? (
         <div
             className={`${style.chatWrapper} lg:w-[70%] flex flex-col justify-between`}
         >
@@ -71,15 +105,15 @@ const MessageChat = () => {
             >
                 <div className={`${style.headerUser} flex items-center gap-3`}>
                     <img
-                        src='https://lh3.googleusercontent.com/a/AGNmyxbc7sbPkrEFeX-duKUJoJ0LqcxK9sDxtVRWl9oHxw=s96-c'
-                        alt='Avatar'
+                        src={receiver?.profileImg}
+                        alt={receiver?.name}
                         className='w-[24px] h-6 rounded-full'
                     />
                     <Link
-                        href={'/nhiempc'}
+                        href={`/user/${receiver?.username}`}
                         className='text-[16px] font-semibold hover:text-slate-500'
                     >
-                        Nguyễn Văn Nhiệm
+                        {receiver?.name}
                     </Link>
                 </div>
                 <div className={`${style.headerAction} flex items-center`}>
@@ -98,8 +132,12 @@ const MessageChat = () => {
                 className={`${style.chatBody} flex flex-col-reverse p-5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-gray-100`}
             >
                 {' '}
-                {chatContent.map((item) => (
-                    <MessageChatItem content={item} />
+                {conversation.map((item, index) => (
+                    <MessageChatItem
+                        key={index}
+                        conversationItem={item}
+                        user={user}
+                    />
                 ))}
             </div>
             <div className={`${style.chatFooter}`}>
@@ -133,15 +171,54 @@ const MessageChat = () => {
                             onChange={(e) => setMessage(e.target.value)}
                         />
                     </div>
-                    <div className={`${style.right} flex`}>
-                        <button type='button' className='p-2'>
-                            <EmojiIcon fill='rgb(38, 38, 38)' />
-                        </button>
-                        <button type='button' className='p-2'>
-                            <LikeActiveIcon />
-                        </button>
-                    </div>
+                    {!message && (
+                        <div className={`${style.right} flex`}>
+                            <button type='button' className='p-2'>
+                                <SendImageIcon />
+                            </button>
+                            <button type='button' className='p-2'>
+                                <LikeActiveIcon />
+                            </button>
+                        </div>
+                    )}
+                    {message && (
+                        <div className={`${style.right} flex`}>
+                            <button
+                                type='button'
+                                className={`${style.sendMessBtn} py-2 px-4 font-medium text-[14px]`}
+                                onClick={handleSendMessage}
+                            >
+                                Gửi
+                            </button>
+                        </div>
+                    )}
                 </div>
+            </div>
+        </div>
+    ) : (
+        <div
+            className={`${style.chatWrapper} lg:w-[70%] flex justify-center items-center`}
+        >
+            <div
+                className={`${style.noMessage} flex flex-col justify-center items-center`}
+            >
+                <PaperPlaneRoundedIcon width='96' height='96' />
+                <div
+                    className={`${style.yourMessageText} font-normal text-[20px] mt-1`}
+                >
+                    Tin nhắn của bạn
+                </div>
+                <span
+                    className={`${style.noMessageCaption} font-normal text-[14px] mt-1`}
+                >
+                    Gửi ảnh và tin nhắn riêng tư cho bạn bè hoặc nhóm.
+                </span>
+                <button
+                    type='button'
+                    className={`${style.sendMessageBtn} mt-6`}
+                >
+                    Gửi tin nhắn
+                </button>
             </div>
         </div>
     );

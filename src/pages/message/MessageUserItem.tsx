@@ -1,24 +1,45 @@
+import { DocumentData } from 'firebase/firestore';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import style from './Message.module.css';
 
-const MessageUserItem = () => {
+type MessageUserItemProps = {
+    userChatItem: DocumentData;
+};
+
+const MessageUserItem: React.FunctionComponent<MessageUserItemProps> = ({
+    userChatItem
+}) => {
+    const router = useRouter();
+    const [userItem, setUserItem] = React.useState<DocumentData>();
+
+    React.useEffect(() => {
+        if (!userChatItem) return;
+        if (!userChatItem.data()) return;
+        setUserItem(userChatItem);
+    }, [userChatItem]);
+
     return (
-        <Link href={'/message/id'}>
+        <Link href={`/message/${userItem?.data().username}`}>
             <div
-                className={`${style.UserItemWrapper} flex items-center px-5 py-2`}
+                className={`${
+                    style.UserItemWrapper
+                } flex items-center px-5 py-2 ${
+                    userItem?.data().username === router.query.sender
+                        ? 'bg-zinc-200'
+                        : ''
+                }`}
             >
                 <div className={`${style.userAvatar} w-[25%]`}>
-                    <Link href={'/nhiempc'}>
-                        <img
-                            src='https://lh3.googleusercontent.com/a/AGNmyxbc7sbPkrEFeX-duKUJoJ0LqcxK9sDxtVRWl9oHxw=s96-c'
-                            alt='Avatar'
-                            className='rounded-full w-[56px] h-[56px]'
-                        />
-                    </Link>
+                    <img
+                        src={userItem?.data().profileImg}
+                        alt={userItem?.data().name}
+                        className='rounded-full w-[56px] h-[56px]'
+                    />
                 </div>
                 <div className={`${style.userInfo} w-[75%]`}>
-                    <p>Nguyễn Văn Nhiệm</p>
+                    <p>{userItem?.data().name}</p>
                     <span>Đã gửi tin nhắn cho bạn</span>
                 </div>
             </div>

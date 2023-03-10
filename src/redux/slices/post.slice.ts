@@ -1,7 +1,7 @@
 import { IPost } from '@/models/IPost';
 import { createSlice } from '@reduxjs/toolkit';
 import { db, storage } from '../../../firebase';
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, DocumentData, getDoc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, setDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 
 const posts : IPost[] = [];

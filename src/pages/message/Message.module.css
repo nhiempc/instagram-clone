@@ -45,3 +45,31 @@
 .input input {
     height: inherit;
 }
+.sendMessBtn {
+    color: rgb(0, 149, 246);
+}
+.sendMessBtn:hover,
+.yourMessageText {
+    color: rgb(38, 38, 38);
+}
+.noMessageCaption {
+    color: rgb(142, 142, 142);
+}
+.sendMessageBtn {
+    background-color: rgb(0, 149, 246);
+    color: white;
+    font-weight: 500;
+    opacity: 1;
+    font-size: 14px;
+    opacity: 0.8;
+    border-radius: 8px;
+    padding: 6px 16px;
+    height: fit-content;
+}
+.sendMessageBtn:hover {
+    opacity: 1;
+    color: white;
+}
+.UserItemWrapper {
+    border-bottom: 1px solid #d0d0d0;
+}

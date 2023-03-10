@@ -58,7 +58,10 @@ const SidebarItem: React.FunctionComponent<SidebarItemProps> = ({
                     onClick={handleClick}
                     className={`${style.nav_item} flex items-center w-full p-3`}
                 >
-                    <div className={style.sidebar_icon}>{icon}</div>
+                    <div className={style.sidebar_icon}>
+                        {router.pathname === to && icon[1]}
+                        {router.pathname !== to && icon[0]}
+                    </div>
                     <div
                         className={`${style.sidebar_content} pl-4 lg:block md:hidden sm:hidden xs:hidden`}
                     >
