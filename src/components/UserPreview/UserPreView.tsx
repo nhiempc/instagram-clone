@@ -16,7 +16,6 @@ import React from 'react';
 import style from './UserPreview.module.css';
 import { useTypedDispatch } from '@/redux/store';
 import { addFollow, unFollow } from '@/redux/slices/user.slice';
-import { useRouter } from 'next/router';
 
 type UserPreviewProps = {
     username: string;

@@ -7,13 +7,7 @@ import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc
-} from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { removeVietnameseTones } from '@/common';
 
@@ -57,7 +51,7 @@ export default function SignIn() {
         addUser();
         router.push('/');
     }
-    if (!session) {
+    if (session === null) {
         return (
             <>
                 <div className={`${style.login_wrapper}`}>

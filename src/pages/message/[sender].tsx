@@ -1,13 +1,13 @@
 import Content from '@/components/Content';
 import Layout from '@/components/Layout';
 import React from 'react';
-import Stories from '@/components/Stories';
-import Posts from '@/components/Posts';
-import Footer from '@/components/Footer';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import MessageUser from './MessageUser';
+import MessageChat from './MessageChat';
+import style from './Message.module.css';
 
-export default function HomePage() {
+export default function MessagePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const loading = status === 'loading';
@@ -20,11 +20,12 @@ export default function HomePage() {
         session && (
             <Layout>
                 <Content>
-                    <div className='main_content md:w-full lg:w-2/3 sm:w-full xs:w-full lg:mr-[40px]'>
-                        <Stories />
-                        <Posts />
+                    <div
+                        className={`${style.main_content} md:w-full lg:w-full sm:w-full xs:w-full flex mt-8 mb-5`}
+                    >
+                        <MessageUser />
+                        <MessageChat />
                     </div>
-                    <Footer />
                 </Content>
             </Layout>
         )

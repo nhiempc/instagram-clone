@@ -17,7 +17,7 @@ import {
 } from '@/assets/icons';
 
 type menuItems = {
-    icon: React.ReactNode;
+    icon: React.ReactNode[];
     content: string;
     to?: string | undefined;
     type: string;
@@ -26,50 +26,50 @@ type menuItems = {
 
 export const menu: menuItems[] = [
     {
-        icon: <HomeActiveIcon />,
+        icon: [<HomeIcon />, <HomeActiveIcon />],
         content: 'Trang chủ',
         to: '/',
         type: 'link'
     },
     {
-        icon: <SearchIcon />,
+        icon: [<SearchIcon />],
         content: 'Tìm kiếm',
         type: 'button',
         btnAction: 'search'
     },
     {
-        icon: <ExploreIcon />,
+        icon: [<ExploreIcon />],
         content: 'Khám phá',
-        to: '/',
+        to: '',
         type: 'link'
     },
     {
-        icon: <ReelsIcon />,
+        icon: [<ReelsIcon />],
         content: 'Reels',
-        to: '/',
+        to: '',
         type: 'link'
     },
     {
-        icon: <MessengerIcon />,
+        icon: [<MessengerIcon />, <MessengerActiveIcon />],
         content: 'Tin nhắn',
-        to: '/',
+        to: '/message',
         type: 'link'
     },
     {
-        icon: <NotificationIcon />,
+        icon: [<NotificationIcon />],
         content: 'Thông báo',
         type: 'button',
         btnAction: 'notification'
     },
     {
-        icon: <CreateIcon />,
+        icon: [<CreateIcon />],
         content: 'Tạo',
         type: 'button',
         btnAction: 'create'
     }
 ];
 export const setting: menuItems = {
-    icon: <ViewMoreIcon />,
+    icon: [<ViewMoreIcon />],
     content: 'Xem thêm',
     type: 'button',
     btnAction: 'view-more'

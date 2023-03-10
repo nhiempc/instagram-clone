@@ -1,0 +1,47 @@
+.main_content {
+    height: calc(100vh - 52px);
+}
+.chatWrapper {
+    flex-grow: 1;
+    border: 1px solid #d0d0d0;
+    border-left: none;
+}
+.listUserWrapper {
+    border: 1px solid #d0d0d0;
+}
+.listUserHeader {
+    border-bottom: 1px solid #d0d0d0;
+}
+.userInfo p,
+.userInfo span {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(38, 38, 38);
+}
+.userInfo span {
+    color: rgb(142, 142, 142);
+}
+.chatHeader {
+    flex-shrink: 0;
+    border-bottom: 1px solid #d0d0d0;
+}
+.chatInput {
+    border: 1px solid #d0d0d0;
+}
+.chatBody {
+    flex-grow: 1;
+    overflow-y: scroll;
+}
+.chatContent {
+    color: rgb(38, 38, 38);
+    border: 1px solid #d0d0d0;
+}
+.chatItemWrapper {
+    height: fit-content;
+}
+.input {
+    flex-grow: 1;
+}
+.input input {
+    height: inherit;
+}

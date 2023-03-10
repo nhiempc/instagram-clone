@@ -156,7 +156,7 @@ const PostItem: React.FunctionComponent<PostItemProps> = ({ post }) => {
     };
 
     const handleDeletePost = async () => {
-        typedDispatch(deletePost(post.id));
+        typedDispatch(deletePost(post.id, username));
         setIsOpenPersonalModal(!isOpenPersonalModal);
     };
 

@@ -18,7 +18,6 @@ import { db } from '../../../firebase';
 import UserContent from './UserContent';
 import { useTypedDispatch } from '@/redux/store';
 import { addFollow, unFollow } from '@/redux/slices/user.slice';
-import { async } from '@firebase/util';
 
 export default function UserPage() {
     const { data: session, status } = useSession();
@@ -150,7 +149,7 @@ export default function UserPage() {
     const loading = status === 'loading';
 
     if (loading) return <p>Loading...</p>;
-    if (!session) {
+    if (session === null) {
         router.push('/auth/signin');
     }
 

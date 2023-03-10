@@ -20,20 +20,6 @@ export default function Home() {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <main>
-                {/* <Router>
-                    <Routes>
-                        {publicRoutes.map((route, index) => {
-                            const Page = route.component;
-                            return (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={<Page />}
-                                />
-                            );
-                        })}
-                    </Routes>
-                </Router> */}
                 <HomePage />
             </main>
         </>

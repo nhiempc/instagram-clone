@@ -163,6 +163,10 @@ const PostDetailModal: React.FunctionComponent<PostModalProps> = ({
         return () => unsubscribe();
     }, [postId, db]);
 
+    if (session === null) {
+        router.push('/auth/signin');
+    }
+
     return (
         (postData || post) && (
             <>

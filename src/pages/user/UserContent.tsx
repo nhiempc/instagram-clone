@@ -115,8 +115,12 @@ const UserContent: React.FunctionComponent<UserContentProps> = ({
                                             >
                                                 <img
                                                     className='p-3'
-                                                    src={post?.data().image}
-                                                    alt={post?.data().username}
+                                                    src={
+                                                        post?.data()?.image
+                                                            ? post.data()?.image
+                                                            : ''
+                                                    }
+                                                    alt={post?.data()?.username}
                                                 />
                                             </div>
                                         ))}

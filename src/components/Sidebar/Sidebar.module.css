@@ -17,7 +17,16 @@
     transition: all 0.25s ease-out;
 }
 .setting_area {
-    position: absolute;
-    bottom: 30px;
-    left: 0;
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+.nav_item_active svg {
+    fill: black;
+    color: black;
+}
+.wrapper {
+    height: 100vh;
 }

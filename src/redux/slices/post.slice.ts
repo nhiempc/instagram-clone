@@ -36,11 +36,12 @@ export const addCommentToPost = (id: any, data: any) => async () => {
     await addDoc(collection(db, 'posts', id, 'comments'), data);
 }
 
-export const deletePost = (id: any) => async () => {
+export const deletePost = (id: any, username?: any) => async () => {
     const queryComments = query(
         collection(db, 'posts', id, 'comments')
     );
     const queryLikes = query(collection(db, 'posts', id, 'likes'));
+    await deleteDoc(doc(db, 'users', username, 'save', id))
     const imgRef = ref(storage, `post/${id}/image`);
     onSnapshot(queryComments, (snapshot) =>
         snapshot.docs.forEach((d) =>
